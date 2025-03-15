@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:spendo/home/screens/expense_screen.dart';
 import 'package:spendo/home/screens/income_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
+import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
               height: size.height / 2.7,
               width: size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomRight: Radius.circular(44),
                   bottomLeft: Radius.circular(44),
                 ),
@@ -28,8 +29,8 @@ class HomeScreen extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFFFFF6E6),
-                    Color(0xFFF8EDD8).withOpacity(0.3),
+                    const Color(0xFFFFF6E6),
+                    const Color(0xFFF8EDD8).withOpacity(0.3),
                   ],
                   stops: [0.0956, 1.0],
                 ),
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -55,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                           child: Container(
                             height: size.height / 9,
                             width: size.width / 9,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                 image: AssetImage(
@@ -65,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Row(
+                        const Row(
                           children: [
                             Icon(
                               Icons.keyboard_arrow_down_sharp,
@@ -82,15 +83,15 @@ class HomeScreen extends StatelessWidget {
                         ),
                         IconButton(
                             onPressed: () {},
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.notifications_sharp,
                               size: 35,
                             ))
                       ],
                     ),
                     Transform.translate(
-                      offset: Offset(0, -10),
-                      child: Text(
+                      offset: const Offset(0, -10),
+                      child: const Text(
                         'Account Balance',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
@@ -98,8 +99,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     Transform.translate(
-                      offset: Offset(0, -10),
-                      child: Text(
+                      offset: const Offset(0, -10),
+                      child: const Text(
                         'Rs9400',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 30),
@@ -113,9 +114,9 @@ class HomeScreen extends StatelessWidget {
                               size: size,
                               title: 'Income',
                               amount: 'Rs5000',
-                              color: Color(0xFF00A86B),
+                              color: const Color(0xFF00A86B),
                               icon: 'assets/icons/Income.png',
-                              onTab: () => Get.to(() => IncomeScreen())),
+                              onTab: () => Get.to(() => const IncomeScreen())),
                         ),
                         SizedBox(width: size.width / 30),
                         Flexible(
@@ -123,9 +124,9 @@ class HomeScreen extends StatelessWidget {
                               size: size,
                               title: 'Expense',
                               amount: 'Rs5000',
-                              color: Color(0xFFFD3C4A),
+                              color: const Color(0xFFFD3C4A),
                               icon: 'assets/icons/Income.png',
-                              onTab: () => Get.to(() => ExpenseScreen())),
+                              onTab: () => Get.to(() => const ExpenseScreen())),
                         ),
                       ],
                     ),
@@ -136,17 +137,17 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: size.width / 22, vertical: size.height / 70),
-                    child: Text(
+                    child: const Text(
                       'Spend Frequency',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  SpendFrequencyChart(),
+                  CustomSpendFrequencyChartWidget(),
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: size.width / 22, vertical: size.width / 111),
@@ -190,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Recent Transaction',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
@@ -201,9 +202,9 @@ class HomeScreen extends StatelessWidget {
                               vertical: size.height / 100),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color(0xFF8F57FB).withOpacity(0.2),
+                            color: const Color(0xFF8F57FB).withOpacity(0.2),
                           ),
-                          child: Text(
+                          child: const Text(
                             'See All',
                             style: TextStyle(
                                 color: Color(0xFF7F3DFF),
@@ -217,7 +218,7 @@ class HomeScreen extends StatelessWidget {
                   ListView.builder(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return Container(
@@ -228,7 +229,7 @@ class HomeScreen extends StatelessWidget {
                             horizontal: size.width / 35,
                             vertical: size.height / 50),
                         decoration: BoxDecoration(
-                          color: Color(0xFFFCFCFC),
+                          color: const Color(0xFFFAFAFA),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -251,7 +252,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: size.width / 30),
-                            Expanded(
+                            const Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -275,7 +276,7 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
@@ -354,7 +355,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                     fontSize: 16,
@@ -362,7 +363,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Text(
                   amount,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 18,
@@ -377,56 +378,3 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class SpendFrequencyChart extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      height: size.height / 5,
-      color: Colors.white,
-      child: LineChart(
-        LineChartData(
-          backgroundColor: Colors.transparent,
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(show: false),
-          borderData: FlBorderData(show: false),
-          minX: 0,
-          maxX: 6,
-          minY: 0,
-          maxY: 8,
-          lineBarsData: [
-            LineChartBarData(
-              spots: [
-                FlSpot(0, 2),
-                FlSpot(1, 1),
-                FlSpot(2, 3),
-                FlSpot(3, 2),
-                FlSpot(4, 5),
-                FlSpot(5, 4),
-                FlSpot(6, 8),
-              ],
-              isCurved: true,
-              color: Color(0xFF7F3DFF),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF7F3DFF).withOpacity(0.3),
-                    Color(0xFF7F3DFF).withOpacity(0.2),
-                    Color(0xFF7F3DFF).withOpacity(0.1),
-                    Colors.transparent,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              dotData: FlDotData(show: false),
-              barWidth: 4,
-              isStrokeCapRound: true,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

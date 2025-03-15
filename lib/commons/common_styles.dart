@@ -7,11 +7,7 @@ class CommonStyles {
       filled: true,
       fillColor: Colors.white,
       hintText: hintText,
-      hintStyle: const TextStyle(
-        fontWeight: FontWeight.w500,
-        fontSize: 16,
-        color: Colors.black87
-      ),
+      hintStyle: const  TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
       contentPadding: EdgeInsets.symmetric(
           horizontal: size.width / 20, vertical: size.height / 46),
       border: OutlineInputBorder(

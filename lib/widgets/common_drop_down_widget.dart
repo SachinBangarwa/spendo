@@ -22,11 +22,18 @@ class CommonDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       value: value,
-      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Colors.black87),
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
       decoration: CommonStyles.inputDecoration(hintText, size),
-      items: items
-          .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-          .toList(),
+      items: [
+        DropdownMenuItem<String>(
+          value: null,
+          child: Text(
+            hintText,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+          ),
+        ),
+        ...items.map((type) => DropdownMenuItem(value: type, child: Text(type))),
+      ],
       onChanged: onChanged,
     );
   }

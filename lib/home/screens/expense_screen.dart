@@ -44,6 +44,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFFFD3C4A),
+      //Color(0xFF0077FF)
       appBar: CommonAppBar(
         title: 'Expense',
         onBack: () {

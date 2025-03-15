@@ -23,7 +23,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor:backGroundCol?? Colors.white,
+      backgroundColor: backGroundCol ?? Colors.white,
       toolbarHeight: MediaQuery.of(context).size.height / 10,
       leading: Padding(
         padding: const EdgeInsets.only(left: 8.0),
@@ -36,15 +36,21 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      title: Text(title,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600,color:textColor?? Color(0xFF212325)),),
+      title: Text(
+        title,
+        style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: textColor ?? Color(0xFF212325)),
+      ),
       centerTitle: true,
       actions: trailing != null
           ? [
-        GestureDetector(
-          onTap: onTrailingTap,
-          child: trailing!,
-        )
-      ]
+              GestureDetector(
+                onTap: onTrailingTap,
+                child: trailing!,
+              )
+            ]
           : null,
     );
   }
