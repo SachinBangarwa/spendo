@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:lottie/lottie.dart';
+import 'package:spendo/commons/common_styles.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
@@ -239,154 +243,6 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 }
 
-class AddAccountScreen extends StatefulWidget {
-  const AddAccountScreen({super.key});
-
-  @override
-  State<AddAccountScreen> createState() => _AddAccountScreenState();
-}
-
-class _AddAccountScreenState extends State<AddAccountScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  String? selectedAccountType;
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    return Scaffold(
-      backgroundColor: ColorManager.primary,
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        toolbarHeight: size.height / 10,
-        backgroundColor: ColorManager.primary,
-        leading: GestureDetector(
-            onTap: () async {
-              FocusScope.of(context).unfocus();
-              await Future.delayed(Duration(milliseconds: 300));
-              Get.back();
-            },
-            child: const Icon(
-              Icons.keyboard_backspace_outlined,
-              color: Colors.white,
-              size: 32,
-            )),
-        title: const Text(
-          'Add New Account',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Balance",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "\$00.0",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: size.height / 2.6,
-            width: size.width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(size.width / 12),
-                topRight: Radius.circular(size.width / 12),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.width / 22, vertical: size.height / 55),
-              child: Column(
-                children: [
-                  _buildTextField(size, _nameController, 'Name'),
-                  SizedBox(height: size.height / 40),
-                  DropdownButtonFormField<String>(
-                    value: selectedAccountType,
-                    decoration: _inputDecoration('Account Type', size),
-                    items: ["Bank", "Credit Card", "Wallet"]
-                        .map((type) =>
-                            DropdownMenuItem(value: type, child: Text(type)))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedAccountType = value;
-                      });
-                    },
-                  ),
-                  Spacer(),
-                  CustomButton(
-                    text: 'Continue',
-                    colorButton: ColorManager.primary,
-                    colorText: ColorManager.lightBackground,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-      Size size, TextEditingController controller, String hintText) {
-    return TextFormField(
-      controller: controller,
-      style: const TextStyle(fontWeight: FontWeight.w600),
-      decoration: _inputDecoration(hintText, size),
-      cursorColor: ColorManager.primary,
-    );
-  }
-
-  InputDecoration _inputDecoration(String hintText, Size size) {
-    return InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      hintText: hintText,
-      hintStyle: const TextStyle(
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w500,
-        fontSize: 16,
-      ),
-      contentPadding: EdgeInsets.symmetric(
-          horizontal: size.width / 20, vertical: size.height / 46),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: ColorManager.primary),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: Color(0xFFFDEEDB), width: 2),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: ColorManager.primary, width: 2),
-      ),
-    );
-  }
-}
 
 class AddWalletScreen extends StatefulWidget {
   const AddWalletScreen({super.key});
@@ -635,3 +491,4 @@ class SetupSuccessScreen extends StatelessWidget {
     );
   }
 }
+

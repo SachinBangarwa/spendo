@@ -11,25 +11,24 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: Color(0xFF7F3DFF),
       body: Center(
         child: Stack(
           alignment: Alignment.center,
           children: [
             Container(
               margin: EdgeInsets.only(right: size.width/10),
-              width: size.width / 5,
-              height: size.height / 5,
+              width: size.width /6,
+              height: size.height / 6,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFFFE0B2).withOpacity(0.3),
+                color: const Color(0xFF6A0AE4),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.transparent,
                     blurRadius: 20,
                     spreadRadius: 0,
                     offset: const Offset(0, 5),

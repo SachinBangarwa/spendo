@@ -1,6 +1,9 @@
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:spendo/auth/service/auth_service.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
 
 class SignUpController extends GetxController {
@@ -8,13 +11,17 @@ class SignUpController extends GetxController {
   RxBool visible = true.obs;
   RxBool agreeCheckPrivacy = false.obs;
 
-  Future<User?> signUpCloud(String email, String password) async {
+  Future<User?> signUpCloud(String name,String email, String password) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       User? user = userCredential.user;
       showCustomSnackBar('Success', 'Account created successfully!', isSuccess: true);
+      if(user!=null){
+      await  user.updateDisplayName(name);
+       await AuthService.saveUserData(user, 'email',userName: name);
+      }
       return user;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -32,12 +39,13 @@ class SignUpController extends GetxController {
           break;
       }
     } catch (e) {
+      print('error:${e}');
       showCustomSnackBar('Error', 'An unexpected error occurred: ${e.toString()}', isSuccess: false);
     }
     return null;
   }
 
-  Future<User?> signWithGoogle() async {
+  Future<bool> signWithGoogle() async {
     try {
       GoogleSignIn googleSignIn = GoogleSignIn();
       GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
@@ -54,14 +62,23 @@ class SignUpController extends GetxController {
         await auth.signInWithCredential(authCredential);
 
         showCustomSnackBar('Success', 'Signed in with Google!', isSuccess: true);
-        return userCredential.user;
+
+     User? user=   userCredential.user;
+
+        if(user!=null){
+          await AuthService.saveUserData(user, 'email');
+          if(user.phoneNumber==null||user.phoneNumber!.isEmpty){
+            return true;
+          }
+        }
+        return false;
       } else {
         showCustomSnackBar('Error', 'Google Sign-In was canceled.', isSuccess: false);
       }
     } catch (e) {
       showCustomSnackBar('Error', 'Google Sign-In failed: $e', isSuccess: false);
     }
-    return null;
+    return false;
   }
 }
 

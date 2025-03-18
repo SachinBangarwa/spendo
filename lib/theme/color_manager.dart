@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorManager {
-  static const Color primary = Color(0xFFFE8F00);
+  static const Color primary = Color(0xFF7F3DFF);
 
   static const Color lightBackground = Colors.white;
   static const Color lightCard = Color(0xFFFFCC80);

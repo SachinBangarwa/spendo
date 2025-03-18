@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spendo/auth/controllers/sign_up_controller.dart';
 import 'package:spendo/auth/screens/login_screen.dart';
+import 'package:spendo/commons/common_styles.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
@@ -104,7 +106,7 @@ class SignUpScreen extends StatelessWidget {
                     email.isNotEmpty &&
                     password.isNotEmpty) {
                   User? user =
-                      await signUpController.signUpCloud(email, password);
+                      await signUpController.signUpCloud(name,email, password);
                   if (user != null) {
                     Get.to(() => LoginScreen());
                   }
@@ -125,11 +127,10 @@ class SignUpScreen extends StatelessWidget {
             SizedBox(height: size.height / 25),
             GestureDetector(
               onTap: () async {
-                await signUpController.signWithGoogle().then((user) {
-                  if (user != null) {
-                    print('Home Screen');
-                    // Get.offAll(()=>);
-                  }
+                await signUpController.signWithGoogle().then((bool isVerify) {
+                  // if (isVerify) {
+                 Get.offAll(()=>DashBoardScreen());
+                  // }
                 });
               },
               child: Container(
@@ -139,7 +140,7 @@ class SignUpScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: ColorManager.lightBackground,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFFDEEDB), width: 2),
+                  border: Border.all(color: const Color(0xFFD6CDE4), width: 2),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -191,7 +192,7 @@ class SignUpScreen extends StatelessWidget {
       controller: passwordController,
       obscureText: signUpController.visible.value,
       style: const TextStyle(fontWeight: FontWeight.w600),
-      decoration: _inputDecoration('Password', size).copyWith(
+      decoration: CommonStyles.inputDecoration('Password', size).copyWith(
         suffixIcon: GestureDetector(
           onTap: signUpController.visible.toggle,
           child: Icon(
@@ -212,35 +213,9 @@ class SignUpScreen extends StatelessWidget {
     return TextFormField(
       controller: controller,
       style: const TextStyle(fontWeight: FontWeight.w600),
-      decoration: _inputDecoration(hintText, size),
+      decoration: CommonStyles.inputDecoration(hintText, size),
       cursorColor: ColorManager.primary,
     );
   }
 
-  InputDecoration _inputDecoration(String hintText, Size size) {
-    return InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      hintText: hintText,
-      hintStyle: const TextStyle(
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w500,
-        fontSize: 16,
-      ),
-      contentPadding: EdgeInsets.symmetric(
-          horizontal: size.width / 20, vertical: size.height / 46),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: ColorManager.primary),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: Color(0xFFFDEEDB), width: 2),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: ColorManager.primary, width: 2),
-      ),
-    );
-  }
 }

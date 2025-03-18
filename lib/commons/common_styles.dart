@@ -16,11 +16,11 @@ class CommonStyles {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: Color(0xFFFDEEDB), width: 2),
+        borderSide: const BorderSide(color: Color(0xFFD6CDE4), width: 2),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: ColorManager.primary, width: 2),
+        borderSide: const BorderSide(color: Color(0xFF7F3DFF), width: 2),
       ),
     );
   }

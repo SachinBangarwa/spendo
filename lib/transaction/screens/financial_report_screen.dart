@@ -1,12 +1,15 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/custom_linear_progress_bar_widget.dart';
+import 'package:spendo/widgets/custom_pie_chart_widget.dart';
 import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
 import 'package:spendo/widgets/custom_transaction_section.dart';
 
 class FinancialReportScreen extends StatefulWidget {
-  FinancialReportScreen({super.key});
+  const FinancialReportScreen({super.key});
 
   @override
   State<FinancialReportScreen> createState() => _FinancialReportScreenState();
@@ -66,7 +69,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                     padding: EdgeInsets.only(
                         right: size.width / 50, top: 2, bottom: 2),
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Color(0xffb3a1d4)),
+                        border: Border.all(width: 2, color:  Colors.black12),
                         borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       children: [
@@ -88,36 +91,43 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                   height: size.height / 17,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: Color(0xffcac0dd)),
+                      border: Border.all(width: 2, color:  Colors.black12),
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     children: [
                       Flexible(
-                          child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              bottomLeft: Radius.circular(8)),
-                          color: Color(0xFF5508EB),
-                        ),
-                        child: Icon(
-                          Icons.share,
-                          color: Colors.white,
+                          child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                bottomLeft: Radius.circular(8)),
+                            color: Color(0xFF5508EB),
+                          ),
+                          child: Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
                         ),
                       )),
                       Flexible(
-                          child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8)),
-                          // color: Color(0xFF5508EB),
-                        ),
-                        child: Image.asset(
-                          'assets/icons/budget.png',
-                          color: Color(0xFF5508EB),
+                          child: GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(8),
+                                bottomRight: Radius.circular(8)),
+                          ),
+                          child: Image.asset(
+                            'assets/icons/budget.png',
+                            color: Color(0xFF5508EB),
+                          ),
                         ),
                       ))
                     ],
@@ -127,18 +137,23 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
             ),
           ),
           SizedBox(
-            height: size.height / 30,
+            height: size.height / 12,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-            child: Text(
-              '\$6000',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
-            ),
-          ),
-          CustomSpendFrequencyChartWidget(),
+
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+          //   child: Text(
+          //     '\$6000',
+          //     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+          //   ),
+          // ),
+        // CustomSpendFrequencyChartWidget(),
+
+          CustomPieChartWidget(amount: 8000000,),
+
+
           SizedBox(
-            height: size.height / 66,
+            height: size.height / 9,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 22),
@@ -149,7 +164,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: Colors.grey.shade100,
-                  border: Border.all(width: 2, color: Color(0xffb3a1d4)),
+                  border: Border.all(width: 2, color: Colors.black12),
                   borderRadius: BorderRadius.circular(15)),
               child: Row(
                 children: [
@@ -184,7 +199,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
             ),
           ),
           SizedBox(
-            height: size.height / 45,
+            height: size.height / 25,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 22),
@@ -217,7 +232,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                         top: size.height / 230,
                         bottom: size.height / 230),
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Color(0xffcac0dd)),
+                        border: Border.all(width: 2, color: Colors.black12),
                         borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -244,7 +259,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           border:
-                              Border.all(width: 2, color: Color(0xffcac0dd)),
+                              Border.all(width: 2, color:  Colors.black12),
                           borderRadius: BorderRadius.circular(10)),
                       child: Icon(
                         Icons.sort_sharp,
@@ -262,10 +277,11 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                   physics: BouncingScrollPhysics(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-                    child: CustomTransactionSection(),
+                    child: CustomLinearProgressBarWidget(),
                   )))
         ],
       ),
     );
   }
 }
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../theme/color_manager.dart';
 
 class CustomTransactionSection extends StatelessWidget {

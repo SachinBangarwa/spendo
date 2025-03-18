@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:spendo/auth/controllers/login_controller.dart';
 import 'package:spendo/auth/screens/forget_password_screen.dart';
 import 'package:spendo/auth/screens/sign_up_screen.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
@@ -52,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                 if (email.isNotEmpty && password.isNotEmpty) {
                   User? user = await loginController.loginCloud(email, password);
                   if (user != null) {
-                    Get.to(() => SignUpScreen());
+                    Get.to(() => DashBoardScreen());
                     Get.snackbar('SuccessFull', 'Login Account $email',
                         backgroundColor: ColorManager.lightText,
                         colorText: ColorManager.lightBackground);

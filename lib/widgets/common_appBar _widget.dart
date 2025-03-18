@@ -23,6 +23,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      elevation: 0,
       backgroundColor: backGroundCol ?? Colors.white,
       toolbarHeight: MediaQuery.of(context).size.height / 10,
       leading: Padding(
