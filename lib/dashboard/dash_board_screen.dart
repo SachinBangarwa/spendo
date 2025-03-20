@@ -17,7 +17,7 @@ class DashBoardScreen extends StatelessWidget {
     const HomeScreen(),
     const TransactionScreen(),
     const BudgetScreen(),
-    const AddAccountScreen()
+    const ProfileScreen()
   ];
 
   @override

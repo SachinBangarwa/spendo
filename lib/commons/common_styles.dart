@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:spendo/theme/color_manager.dart';
 
 class CommonStyles {
@@ -24,4 +25,26 @@ class CommonStyles {
       ),
     );
   }
+  static Widget buildBalanceTextField(Size size, TextEditingController controller, RxDouble balance) {
+    return Expanded(
+      child: TextFormField(
+        controller: controller,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+        ),
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+        ),
+        cursorColor: Colors.white,
+        textAlign: TextAlign.start,
+        onChanged: (value) {
+          balance.value = double.tryParse(value) ?? 0.0;
+        },
+      ),
+    );
+  }
+
 }
