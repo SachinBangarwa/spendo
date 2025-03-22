@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List days = [
     'Today',
     'Week',
+    'kuggugyuh'
     'Month',
     'Year',
     'daily'
