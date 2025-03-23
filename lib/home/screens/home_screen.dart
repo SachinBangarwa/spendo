@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Week',
     'Month',
     'Year',
+    'daily'
   ];
 
   @override
