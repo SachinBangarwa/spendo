@@ -17,12 +17,12 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+//sachin
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,color: Colors.red,
       theme: ThemeData.light(),
       home: SignUpScreen(),
     );
