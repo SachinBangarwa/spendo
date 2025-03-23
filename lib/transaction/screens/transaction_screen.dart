@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
+import 'package:spendo/transaction/screens/detail_transaction_screen.dart';
 import 'package:spendo/transaction/screens/report_screen.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
-import '../../widgets/custom_transaction_section.dart';
-
-class TransactionScreen extends StatelessWidget {
+class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
+
+  @override
+  State<TransactionScreen> createState() => _TransactionScreenState();
+}
+
+class _TransactionScreenState extends State<TransactionScreen> {
+  late final TransactionController transactionController =
+      Get.put(TransactionController());
+
+  List<String> frequencies = ['Today', 'Yesterday', 'Week', 'Month', 'Year'];
+
+  String frequency = 'Year';
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    transactionController.fetchFilteredTransactions(frequency);
     return Scaffold(
         backgroundColor: ColorManager.lightBackground,
         body: Padding(
@@ -28,24 +41,52 @@ class TransactionScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(right: size.width / 55),
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Color(0xffcac0dd)),
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.keyboard_arrow_down_sharp,
-                          size: 35,
-                          color: Color(0xff7F3DFF),
-                        ),
-                        Text(
-                          'Month',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      showMenu(
+                        shadowColor: Color(0xffcac0dd),
+                        context: context,
+                        color: Colors.white,
+                        position: RelativeRect.fromLTRB(size.width / 22,
+                            size.height / 14, size.width / 22, 0),
+                        items: frequencies.map((String freq) {
+                          return PopupMenuItem(
+                            value: freq,
+                            child: Text(
+                              freq,
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                frequency = freq;
+                              });
+                              transactionController
+                                  .fetchFilteredTransactions(freq);
+                            },
+                          );
+                        }).toList(),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(right: size.width / 40,top: 2,bottom: 2),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2, color: const Color(0xffcac0dd)),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                            size: 25,
+                            color: Color(0xff7F3DFF),
+                          ),
+                          Text(
+                            frequency,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -55,7 +96,7 @@ class TransactionScreen extends StatelessWidget {
                           isScrollControlled: true,
                           builder: (index) {
                             return Container(
-                              height: size.height/1.5,
+                              height: size.height / 1.5,
                               width: size.width,
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width / 22),
@@ -83,7 +124,7 @@ class TransactionScreen extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Filter Transaction',
                                         style: TextStyle(
                                             fontSize: 16,
@@ -97,7 +138,7 @@ class TransactionScreen extends StatelessWidget {
                                             color: const Color(0xffEEE5FF),
                                             borderRadius:
                                                 BorderRadius.circular(15)),
-                                        child: Text(
+                                        child: const Text(
                                           'Reset',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
@@ -107,7 +148,7 @@ class TransactionScreen extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: size.height / 55),
-                                  Text(
+                                  const Text(
                                     'Filter By',
                                     style: TextStyle(
                                         fontSize: 16,
@@ -132,7 +173,7 @@ class TransactionScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 2,
-                                              color: Color(0xffcac0dd)),
+                                              color: const Color(0xffcac0dd)),
                                           borderRadius:
                                               BorderRadius.circular(20),
 
@@ -140,7 +181,7 @@ class TransactionScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           type[index],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               color: Color(0xff1b1919)),
                                         ),
@@ -148,7 +189,7 @@ class TransactionScreen extends StatelessWidget {
                                     );
                                   })),
                                   SizedBox(height: size.height / 55),
-                                  Text(
+                                  const Text(
                                     'Sort By',
                                     style: TextStyle(
                                         fontSize: 16,
@@ -175,7 +216,7 @@ class TransactionScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 2,
-                                              color: Color(0xffcac0dd)),
+                                              color: const Color(0xffcac0dd)),
                                           borderRadius:
                                               BorderRadius.circular(20),
 
@@ -183,22 +224,23 @@ class TransactionScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           type[index],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               color: Color(0xff1b1919)),
                                         ),
                                       ),
                                     );
                                   })),
-                                  Text(
+                                  const Text(
                                     'Category',
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700),
                                   ),
                                   SizedBox(height: size.height / 55),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Choses Category',
@@ -215,15 +257,22 @@ class TransactionScreen extends StatelessWidget {
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.w500),
                                           ),
-                                          Icon(Icons.arrow_forward_ios_sharp,color: Color(0xff7F3DFF),)
+                                          Icon(
+                                            Icons.arrow_forward_ios_sharp,
+                                            color: Color(0xff7F3DFF),
+                                          )
                                         ],
                                       )
                                     ],
                                   ),
-                                Spacer(),
-
-                                  CustomButton(text: 'Apply', colorButton:  Color(0xff7F3DFF), colorText: ColorManager.lightBackground, onTap: (){})
-                               ,   SizedBox(height: size.height / 35), ],
+                                  const Spacer(),
+                                  CustomButton(
+                                      text: 'Apply',
+                                      colorButton: const Color(0xff7F3DFF),
+                                      colorText: ColorManager.lightBackground,
+                                      onTap: () {}),
+                                  SizedBox(height: size.height / 35),
+                                ],
                               ),
                             );
                           });
@@ -232,10 +281,10 @@ class TransactionScreen extends StatelessWidget {
                         padding: EdgeInsets.all(size.width / 100),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            border:
-                                Border.all(width: 2, color: Color(0xffcac0dd)),
+                            border: Border.all(
+                                width: 2, color: const Color(0xffcac0dd)),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Icon(
+                        child: const Icon(
                           Icons.sort_sharp,
                           size: 24,
                         )),
@@ -246,16 +295,17 @@ class TransactionScreen extends StatelessWidget {
                 height: size.height / 30,
               ),
               GestureDetector(
-                onTap: (){
-                  Get.to(()=>ReportScreen());
+                onTap: () {
+                  Get.to(() => const ReportScreen());
                 },
                 child: Container(
                   width: size.width,
-                  padding: EdgeInsets.symmetric(horizontal: size.width / 22,vertical: size.height/95),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 22, vertical: size.height / 95),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xffEEE5FF)),
-                  child: Row(
+                      color: const Color(0xffEEE5FF)),
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -265,10 +315,10 @@ class TransactionScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: Color(0xff7F3DFF)),
                       ),
-                    Icon(
-                            Icons.arrow_forward_ios_sharp,
-                            color: Color(0xff7F3DFF),
-                          )
+                      Icon(
+                        Icons.arrow_forward_ios_sharp,
+                        color: Color(0xff7F3DFF),
+                      )
                     ],
                   ),
                 ),
@@ -278,37 +328,227 @@ class TransactionScreen extends StatelessWidget {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Today',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: size.height / 75,
-                      ),
-                      CustomTransactionSection(),
-                      SizedBox(
-                        height: size.height / 75,
-                      ),
-                      const Text(
-                        'Yesterday',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: size.height / 75,
-                      ),
-                      CustomTransactionSection(),
-                    ],
+                  physics: const BouncingScrollPhysics(),
+                  child: Obx(
+                    () {
+                      Map<String, List<Map<String, dynamic>>>
+                          categorizedTransactions = {};
+
+                      for (var transaction
+                          in transactionController.transactionsList) {
+                        DateTime date = DateTime.parse(transaction['date']);
+                        String category = getTransactionHeader(date);
+
+                        if (!categorizedTransactions.containsKey(category)) {
+                          categorizedTransactions[category] = [];
+                        }
+                        categorizedTransactions[category]!.add(transaction);
+                      }
+
+                      return transactionController.transactionsList.isEmpty
+                          ? Padding(
+                            padding:  EdgeInsets.only(top: size.height/4),
+                            child: const Center(
+                                                    child: Text(
+                            'No transactions available',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                                                    ),
+                                                  ),
+                          )
+
+                          : Column(
+                              children:
+                                  categorizedTransactions.entries.map((entry) {
+                                String category = entry.key;
+                                List<Map<String, dynamic>> transactions =
+                                    entry.value;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: size.width / 120,
+                                          vertical: size.height / 120),
+                                      child: Text(
+                                        category,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: transactions.length,
+                                      itemBuilder: (context, index) {
+                                        Map<String, dynamic> data =
+                                            transactions[index];
+
+                                        String formattedAmount =
+                                            '${data['amount'] ?? '0'}';
+                                        String formattedTime = DateFormat.jm()
+                                            .format(
+                                                DateTime.parse(data['date']));
+
+                                        bool isNegative =
+                                            (data['type'] == 'Expense' ||
+                                                data['type'] == 'Transfer');
+                                        Color amountColor = isNegative
+                                            ? Colors.red
+                                            : Colors.green;
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(() =>
+                                                DetailTransactionScreen(
+                                                    data: data));
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: size.height / 150),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: size.width / 35,
+                                                vertical: size.height / 50),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFAFAFA),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  height: size.height / 16,
+                                                  width: size.height / 16,
+                                                  decoration: BoxDecoration(
+                                                    color: ColorManager.primary
+                                                        .withOpacity(0.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  child: Center(
+                                                    child: Image.asset(
+                                                      'assets/icons/profile.png',
+                                                      width: size.height / 22,
+                                                      height: size.height / 22,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width / 30),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        data['category'] == ''
+                                                            ? 'Transfer'
+                                                            : data['category'],
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.black87,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text(
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        data['description'] ==
+                                                                ''
+                                                            ? 'Buy some grocery'
+                                                            : data[
+                                                                'description'],
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 13,
+                                                          color:
+                                                              Color(0xFF91919F),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      isNegative
+                                                          ? '-₹$formattedAmount'
+                                                          : "₹$formattedAmount",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: amountColor,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      formattedTime,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color:
+                                                            Color(0xFF91919F),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            );
+                    },
                   ),
                 ),
               ),
             ],
           ),
         ));
+  }
+
+  String getTransactionHeader(DateTime date) {
+    DateTime now = DateTime.now();
+    DateTime yesterday = now.subtract(Duration(days: 1));
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return "Today";
+    } else if (date.year == yesterday.year &&
+        date.month == yesterday.month &&
+        date.day == yesterday.day) {
+      return "Yesterday";
+    } else if (date.year == now.year && date.month == now.month) {
+      return "This Month";
+    } else if (date.year == now.year) {
+      return "This Year";
+    } else {
+      return DateFormat.yMMM().format(date);
+    }
   }
 }

@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:spendo/profile/screens/account/account_screen.dart';
+import 'package:spendo/profile/screens/profile_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 
-class AddAccountSuccessScreen extends StatelessWidget {
+class AddAccountSuccessScreen extends StatefulWidget {
   const AddAccountSuccessScreen({super.key});
+
+  @override
+  State<AddAccountSuccessScreen> createState() =>
+      _AddAccountSuccessScreenState();
+}
+
+class _AddAccountSuccessScreenState extends State<AddAccountSuccessScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    moveAccountScreen();
+  }
+
+  Future moveAccountScreen() async {
+    await Future.delayed(const Duration(seconds: 5));
+    Get.offAll(() => AccountScreen());
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,6 @@ class CustomTransactionSection extends StatelessWidget {
         return Container(
 
           margin: EdgeInsets.symmetric(
-              // horizontal: size.width / 22,
               vertical: size.height / 150),
           padding: EdgeInsets.symmetric(
               horizontal: size.width / 34, vertical: size.height / 50),

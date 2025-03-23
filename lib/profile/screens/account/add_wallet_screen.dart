@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:spendo/commons/common_styles.dart';
+import 'package:spendo/profile/screens/account/account_screen.dart';
+import 'package:spendo/profile/screens/account/add_account_success_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import '../../../widgets/common_appBar _widget.dart';
@@ -30,9 +33,9 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
     _balanceController.text = initialBalance.toString();
 
     _walletController.selectedAccountType.value =
-    widget.name != null && _walletController.banks.contains(widget.name)
-        ? widget.name!
-        : "Cash";
+        widget.name != null && _walletController.banks.contains(widget.name)
+            ? widget.name!
+            : "Cash";
   }
 
   @override
@@ -82,14 +85,13 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: size.width / 100),
-
                     CommonStyles.buildBalanceTextField(
-                        size,
-                        _balanceController,
-                        _walletController.balance,),
+                      size,
+                      _balanceController,
+                      _walletController.balance,
+                    ),
                   ],
                 ),
-
               ],
             ),
           ),
@@ -139,8 +141,15 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
                     onTap: () async {
                       _walletController.balance.value =
                           double.tryParse(_balanceController.text) ?? 0.0;
+                      if (
+                          double.parse(_balanceController.text) > 0) {
+                        await _walletController
+                            .saveWalletToFirebase()
+                            .then((onValue) async {
+                          Get.offAll(() => const AddAccountSuccessScreen());
 
-                        await _walletController.saveWalletToFirebase();
+                        });
+                      }
                     },
                   ),
                 ],
@@ -151,6 +160,7 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
       ),
     );
   }
+
 
   Widget _buildTextField(Size size, String hintText, RxString value) {
     return Obx(() => TextFormField(

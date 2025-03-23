@@ -8,6 +8,7 @@ class CommonDropdown extends StatelessWidget {
   final ValueChanged<String?>? onChanged;
   final String hintText;
   final Size size;
+  final Color? borderColor;
 
   const CommonDropdown({
     super.key,
@@ -16,14 +17,17 @@ class CommonDropdown extends StatelessWidget {
     required this.onChanged,
     required this.hintText,
     required this.size,
+    this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       value: value,
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-      decoration: CommonStyles.inputDecoration(hintText, size),
+      style: const TextStyle(
+          fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+      decoration:
+      CommonStyles.inputDecoration(hintText, size, borderColor: borderColor),
       items: [
         DropdownMenuItem<String>(
           value: null,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:spendo/budget/screens/budget_screen.dart';
 import 'package:spendo/dashboard/controllers/dash_board_controller.dart';
 import 'package:spendo/home/screens/home_screen.dart';
+import 'package:spendo/home/screens/transfer_screen.dart';
 import 'package:spendo/profile/screens/profile_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/transaction_screen.dart';
@@ -149,7 +150,7 @@ class DashBoardScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              onTap: () => print('Currency Exchange Clicked'),
+              onTap: () => Get.to(()=>TransferScreen()),
             ),
             SpeedDialChild(
               backgroundColor: Colors.green,

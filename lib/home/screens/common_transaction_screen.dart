@@ -1,42 +1,62 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/home/controllers/attachment_controller.dart';
+import 'package:spendo/home/controllers/add_transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/common_appBar%20_widget.dart';
 import 'package:spendo/widgets/common_drop_down_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
+import 'package:spendo/widgets/custom_snackbar_widget.dart';
 
 import '../../commons/common_styles.dart';
 
-class IncomeScreen extends StatefulWidget {
-  const IncomeScreen({super.key});
+class CommonTransactionScreen extends StatefulWidget {
+  final String type;
+
+  const CommonTransactionScreen({super.key, required this.type});
 
   @override
-  State<IncomeScreen> createState() => _IncomeScreenState();
+  State<CommonTransactionScreen> createState() => _IncomeScreenState();
 }
 
-class _IncomeScreenState extends State<IncomeScreen> {
+class _IncomeScreenState extends State<CommonTransactionScreen> {
   final TextEditingController descController = TextEditingController();
-  final AttachmentController attachmentController = AttachmentController();
+  final TextEditingController amountController = TextEditingController(text: '0.0');
+  final AttachmentController attachmentController =
+      Get.put(AttachmentController());
+
+  final AddTransactionController addTransactionController =
+      Get.put(AddTransactionController());
+
   bool checkBox = false;
   String? selectedCategory;
   String? selectedWallet;
-
+  String? selectedStartDate;
+  String? selectedEndDate;
   String? selectedFrequency;
-  String? selectedDate;
 
-  List<String> categories = [
+  final List<String> incomeCategories = [
+    "Salary",
+    "Freelance",
+    "Investments",
+    "Gifts",
+    "Business"
+  ];
+
+  final List<String> expenseCategories = [
     "Shopping",
     "Food & Drinks",
     "Transport",
     "Entertainment",
     "Health & Fitness"
   ];
+  List<String> frequencies = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+
   List<String> wallets = [
     "Cash",
     "Bank Account",
@@ -46,20 +66,24 @@ class _IncomeScreenState extends State<IncomeScreen> {
     "Investment",
     "Emergency Fund"
   ];
-  List<String> frequencies = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
 
   @override
   Widget build(BuildContext context) {
+    List<String> categories =
+        widget.type == "Income" ? incomeCategories : expenseCategories;
+    Color themeColor =
+        widget.type == "Income" ? Color(0xFF00A86B) : Color(0xFFFD3C4A);
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFF00A86B),
+      backgroundColor: themeColor,
       appBar: CommonAppBar(
-        title: 'Income',
+        title: widget.type,
         onBack: () {
           Get.back();
         },
-        backGroundCol: const Color(0xFF00A86B),
+        backGroundCol: themeColor,
         iconColor: ColorManager.lightBackground,
         textColor: ColorManager.lightBackground,
       ),
@@ -75,7 +99,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -86,13 +110,19 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       fontSize: 18,
                       height: 0),
                 ),
-                Text(
-                  '\$0',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 64,
-                      height: 0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '₹ ',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 40,
+                          height: 0),
+                    ),
+                    buildBalanceTextField(size, amountController),
+                  ],
                 ),
               ],
             ),
@@ -125,6 +155,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     CommonDropdown(
                       value: selectedCategory,
                       items: categories,
+                      borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
                           selectedCategory = value ?? "Food & Drinks";
@@ -136,13 +167,15 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     SizedBox(
                       height: size.height / 55,
                     ),
-                    _buildTextField(size, descController, 'Description'),
+                    _buildTextField(
+                        size, descController, 'Description', themeColor),
                     SizedBox(
                       height: size.height / 55,
                     ),
                     CommonDropdown(
                       value: selectedWallet,
                       items: wallets,
+                      borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
                           selectedWallet = value ?? "Cash";
@@ -161,7 +194,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                               children: [
                                 Container(
                                   width: size.width / 3.5,
-                                  height: size.height / 7.9,
+                                  height: size.height / 8,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
@@ -169,9 +202,12 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                     color: Colors.grey[200],
                                   ),
                                   child: attachmentController.isImage()
-                                      ? Image.file(
-                                          File(attachmentController.path.value),
-                                          fit: BoxFit.cover)
+                                      ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                        child: Image.file(
+                                            File(attachmentController.path.value),
+                                            fit: BoxFit.cover,height: size.height / 8,),
+                                      )
                                       : Center(
                                           child: Column(
                                             mainAxisAlignment:
@@ -307,7 +343,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                       });
                                 },
                                 child: DottedBorder(
-                                  color: const Color(0xFFFAE7CF),
+                                  color: themeColor.withOpacity(0.3),
                                   strokeWidth: 1.5,
                                   dashPattern: const [8, 4],
                                   borderType: BorderType.RRect,
@@ -340,9 +376,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                             );
                     }),
                     SizedBox(
-                      height: attachmentController.path.isEmpty
-                          ? size.height / 30
-                          : size.height / 45,
+                      height: size.width/55,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -379,11 +413,16 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                   checkBox = !checkBox;
                                 });
                               }
-                              _showBottomSheetDate(value, context, size);
+                              _showBottomSheetDate(
+                                  value, context, size, themeColor);
                             })
                       ],
                     ),
-                    if (checkBox && selectedDate != null) ...[
+                    if (checkBox &&
+                        selectedStartDate != null &&
+                        selectedEndDate != null &&
+                        selectedFrequency != null &&
+                        selectedFrequency!.isNotEmpty) ...[
                       SizedBox(
                         height: size.height / 55,
                       ),
@@ -398,12 +437,26 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 16),
                               ),
-                              Text(
-                                selectedFrequency ?? '',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black87),
+                              Row(
+                                children: [
+                                  Text(
+                                    selectedFrequency ?? '',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                        color: Colors.black87),
+                                  ),
+                                  SizedBox(
+                                    width: size.width / 100,
+                                  ),
+                                  Text(
+                                    selectedStartDate ?? ''.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                        color: Colors.black87),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -416,7 +469,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                     fontWeight: FontWeight.w700, fontSize: 16),
                               ),
                               Text(
-                                selectedDate ?? ''.toString(),
+                                selectedEndDate ?? ''.toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 13,
@@ -424,21 +477,27 @@ class _IncomeScreenState extends State<IncomeScreen> {
                               ),
                             ],
                           ),
-                          Container(
-                            height: size.height / 28,
-                            width: size.height / 15,
-                            margin: EdgeInsets.only(right: 5),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color(0xFF212221),
-                            ),
-                            child: Text(
-                              'Edit',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF96D8C0)),
+                          GestureDetector(
+                            onTap: () {
+                              _showBottomSheetDate(
+                                  true, context, size, themeColor);
+                            },
+                            child: Container(
+                              height: size.height / 28,
+                              width: size.height / 15,
+                              margin: EdgeInsets.only(right: 5),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xFF212221),
+                              ),
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF96D8C0)),
+                              ),
                             ),
                           )
                         ],
@@ -447,44 +506,55 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     const Spacer(),
                     CustomButton(
                         text: 'Continue',
-                        colorButton: const Color(0xFF00A86B),
+                        colorButton: themeColor,
                         colorText: ColorManager.lightBackground,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: ColorManager.lightBackground,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Lottie.asset(
-                                      'assets/icons/success_account.json',
-                                      height: size.height/6,
-                                      width: size.height/6,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const Text(
-                                      "Transaction has been successfully added",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(height: size.height/80,)
-                                  ],
-                                ),
+                        onTap: () async {
+                          double? amount =
+                              double.tryParse(amountController.text);
+                          if (amount == null || amountController.text.isEmpty||amount<=0.0) {
+                            showCustomSnackBar(
+                                'Error', 'Please enter a valid amount',
+                                isSuccess: false);
+                          } else if (selectedCategory == null) {
+                            showCustomSnackBar(
+                                'Error', 'Please select a category',
+                                isSuccess: false);
+                          } else if (selectedWallet == null) {
+                            showCustomSnackBar('Error',
+                                'Please select a wallet or bank account',
+                                isSuccess: false);
+                          } else {
+                            await addTransactionController
+                                .addTransaction(
+                              amount: amount,
+                              category: selectedCategory!,
+                              description: descController.text,
+                              fromAccountId: 'fromAccountId',
+                              fromAccountType: selectedWallet!,
+                              type: widget.type,
+                              isRepeat: checkBox,
+                              frequency: selectedFrequency,
+                              startDate: selectedStartDate,
+                              endDate: selectedEndDate,
+                              imageUrl: attachmentController.path.value ?? '',
+                              toAccountId: '',
+                              toAccountType: '',
+                            )
+                                .then((onValue) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return _buildDialogSuccessAdded(size);
+                                },
                               );
-                            },
-                          );
-                        }),
 
+                              Future.delayed(const Duration(seconds: 3), () {
+                                Navigator.pop(context);
+                                Get.offAll(() => DashBoardScreen());
+                              });
+                            });
+                          }
+                        }),
                   ],
                 ),
               ),
@@ -495,16 +565,48 @@ class _IncomeScreenState extends State<IncomeScreen> {
     );
   }
 
-  void _showBottomSheetDate(bool value, BuildContext context, Size size) {
+  Dialog _buildDialogSuccessAdded(Size size) {
+    return Dialog(
+      backgroundColor: ColorManager.lightBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Lottie.asset(
+            'assets/icons/success_account.json',
+            height: size.height / 6,
+            width: size.height / 6,
+            fit: BoxFit.cover,
+          ),
+          const Text(
+            "Transaction has been successfully added",
+            style: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: size.height / 80,
+          )
+        ],
+      ),
+    );
+  }
+
+  void _showBottomSheetDate(
+      bool value, BuildContext context, Size size, Color themeColor) {
     if (value) {
       showModalBottomSheet(
         context: context,
         builder: (context) {
-          String? tempSelectedDate = selectedDate;
+          String? tempStartDate = selectedStartDate;
+          String? tempEndDate = selectedEndDate;
           return StatefulBuilder(
             builder: (context, setModalState) {
               return Container(
-                height: size.height / 3,
+                height: size.height / 2.5,
                 width: size.width,
                 padding: EdgeInsets.symmetric(horizontal: size.width / 22),
                 decoration: const BoxDecoration(
@@ -533,6 +635,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       size: size,
                       value: selectedFrequency,
                       items: frequencies,
+                      borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
                           selectedFrequency = value ?? 'Frequency';
@@ -541,67 +644,43 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       hintText: 'Frequency',
                     ),
                     SizedBox(height: size.height / 45),
-                    DottedBorder(
-                      color: const Color(0xFFFDEEDB),
-                      strokeWidth: 1.5,
-                      dashPattern: const [6, 4],
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(20),
-                      child: GestureDetector(
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                          );
-
-                          if (pickedDate != null) {
-                            setModalState(() {
-                              selectedDate = tempSelectedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                            });
-                            setState(() {});
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: size.height / 67,
-                              horizontal: size.width / 30),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFFAF3),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                tempSelectedDate != null &&
-                                        tempSelectedDate!.isNotEmpty
-                                    ? selectedDate!
-                                    : 'Select Date',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              const Icon(Icons.calendar_today,
-                                  color: Color(0xFF00A86B)),
-                            ],
-                          ),
-                        ),
-                      ),
+                    _buildDatePicker(
+                      context,
+                      size,
+                      "Start Date",
+                      tempStartDate,
+                      (selected) {
+                        setModalState(() {
+                          selectedStartDate = tempStartDate =
+                              DateFormat('yyyy-MM-dd').format(selected);
+                        });
+                      },
+                    ),
+                    SizedBox(height: size.height / 45),
+                    _buildDatePicker(
+                      context,
+                      size,
+                      "End Date",
+                      tempEndDate,
+                      (selected) {
+                        setModalState(() {
+                          selectedEndDate = tempEndDate =
+                              DateFormat('yyyy-MM-dd').format(selected);
+                        });
+                      },
                     ),
                     const Spacer(),
                     CustomButton(
                       text: 'Next',
-                      colorButton: const Color(0xFF00A86B),
+                      colorButton: themeColor,
                       colorText: ColorManager.lightBackground,
                       onTap: () {
                         setState(() {
-                          selectedDate = tempSelectedDate;
-                          checkBox = true;
+                          bool isCondition = selectedStartDate == null ||
+                              selectedEndDate == null ||
+                              selectedFrequency == null ||
+                              selectedFrequency!.isEmpty;
+                          checkBox = !isCondition;
                         });
                         Get.back();
                       },
@@ -615,6 +694,60 @@ class _IncomeScreenState extends State<IncomeScreen> {
         },
       );
     }
+  }
+
+  Widget _buildDatePicker(
+    BuildContext context,
+    Size size,
+    String label,
+    String? selectedDate,
+    Function(DateTime) onDateSelected,
+  ) {
+    return DottedBorder(
+      color: const Color(0xFFFDEEDB),
+      strokeWidth: 1.5,
+      dashPattern: const [6, 4],
+      borderType: BorderType.RRect,
+      radius: const Radius.circular(20),
+      child: GestureDetector(
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2030),
+          );
+
+          if (pickedDate != null) {
+            onDateSelected(pickedDate);
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              vertical: size.height / 67, horizontal: size.width / 30),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFAF3),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedDate != null && selectedDate.isNotEmpty
+                    ? selectedDate
+                    : label,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              const Icon(Icons.calendar_today, color: Color(0xFF00A86B)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildAttachment(
@@ -647,14 +780,37 @@ class _IncomeScreenState extends State<IncomeScreen> {
     );
   }
 
-  Widget _buildTextField(
-      Size size, TextEditingController controller, String hintText) {
+  Widget _buildTextField(Size size, TextEditingController controller,
+      String hintText, Color themColor) {
     return TextFormField(
       controller: controller,
       style: const TextStyle(
           fontWeight: FontWeight.w600, color: Colors.black87, fontSize: 16),
-      decoration: CommonStyles.inputDecoration(hintText, size),
+      decoration:
+          CommonStyles.inputDecoration(hintText, size, borderColor: themColor),
       cursorColor: ColorManager.primary,
+    );
+  }
+
+  Widget buildBalanceTextField(
+    Size size,
+    TextEditingController controller,
+  ) {
+    return Expanded(
+      child: TextFormField(
+        controller: controller,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+        ),
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+        ),
+        cursorColor: Colors.white,
+        textAlign: TextAlign.start,
+      ),
     );
   }
 }

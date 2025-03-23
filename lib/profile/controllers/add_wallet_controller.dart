@@ -6,6 +6,8 @@ class AddWalletController extends GetxController {
   RxString walletName = "Wallet".obs;
   RxDouble balance = 0.0.obs;
   RxString selectedAccountType = "Cash".obs;
+  User? user = FirebaseAuth.instance.currentUser;
+
   RxList<String> banks = [
     "Cash",
     "Paytm Wallet",
@@ -32,12 +34,10 @@ class AddWalletController extends GetxController {
 
   Future<void> saveWalletToFirebase() async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-     if(walletName.isNotEmpty&&balance.value>0){
        if (user != null) {
          CollectionReference reference = FirebaseFirestore.instance
              .collection('users')
-             .doc(user.uid)
+             .doc(user!.uid)
              .collection('accounts');
 
          DocumentReference documentRef = reference.doc();
@@ -50,7 +50,6 @@ class AddWalletController extends GetxController {
            'createdAt': FieldValue.serverTimestamp(),
          });
        }
-     }
     } catch (e) {
       print('Error saving wallet: $e');
     }

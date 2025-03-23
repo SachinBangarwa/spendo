@@ -1,28 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
+import 'package:spendo/transaction/screens/edite_transaction_screen.dart';
+import 'package:spendo/transaction/screens/edite_transfer_transaction_screen.dart';
 import 'package:spendo/widgets/common_appBar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
 class DetailTransactionScreen extends StatelessWidget {
-  const DetailTransactionScreen({super.key});
+  DetailTransactionScreen({super.key, required this.data});
+
+  final TransactionController transactionController =
+      Get.put(TransactionController());
+
+  final Map<String, dynamic> data;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isTransfer = data['type'] == 'Transfer';
+    Color color = data['type'] == 'Expense'
+        ? const Color(0xFFFD3C4A)
+        : data['type'] == 'Transfer'
+            ? const Color(0xFF0077FF)
+            : const Color(0xFF00A86B);
     return Scaffold(
         backgroundColor: ColorManager.lightBackground,
         appBar: CommonAppBar(
           title: 'Detail Transaction',
-          backGroundCol: Color(0xFFFD3C4A),
+          backGroundCol: color,
           iconColor: ColorManager.lightBackground,
           textColor: ColorManager.lightBackground,
           onBack: () {
             Get.back();
           },
+          onTrailingTap: () async {
+          await  transactionController.deleteTransaction(data['transactionId']);
+          Get.back();
+          },
           trailing: Padding(
             padding: EdgeInsets.only(right: size.width / 22),
-            child: Icon(
+            child: const Icon(
               Icons.restore_from_trash,
               size: 28,
               color: ColorManager.lightBackground,
@@ -35,9 +54,13 @@ class DetailTransactionScreen extends StatelessWidget {
               Container(
                 height: size.height / 4,
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFD3C4A),
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: data['type'] == 'Expense'
+                      ? const Color(0xFFFD3C4A)
+                      : data['type'] == 'Transfer'
+                          ? const Color(0xFF0077FF)
+                          : const Color(0xFF00A86B),
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
                   ),
@@ -50,7 +73,7 @@ class DetailTransactionScreen extends StatelessWidget {
                       height: size.height / 55,
                     ),
                     Text(
-                      '\$120',
+                      "₹${data['amount'].toString()}",
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -60,7 +83,7 @@ class DetailTransactionScreen extends StatelessWidget {
                     SizedBox(
                       height: size.height / 55,
                     ),
-                    Text(
+                    const Text(
                       'Buy some grocery',
                       style: TextStyle(
                         color: Colors.white,
@@ -69,13 +92,16 @@ class DetailTransactionScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Saturday 4 June 2021    16:20',
+                      data['date'] != null
+                          ? DateFormat("yyyy-MM-dd HH:mm:ss")
+                              .format(DateTime.parse(data['date']).toLocal())
+                          : "No Date Available",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -92,7 +118,7 @@ class DetailTransactionScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        color: Color(0xFFFDFDFD),
+                        color: const Color(0xFFFDFDFD),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: size.width / 22,
@@ -100,10 +126,20 @@ class DetailTransactionScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _transactionDetailItem('Type', 'Expense', size),
                               _transactionDetailItem(
-                                  'Category', 'Shopping', size),
-                              _transactionDetailItem('Wallet', 'Wallet', size),
+                                  'Type', data['type'], size),
+                              _transactionDetailItem(
+                                  isTransfer ? 'From' : 'Category',
+                                  isTransfer
+                                      ? data['fromAccountType']
+                                      : data['category'],
+                                  size),
+                              _transactionDetailItem(
+                                  isTransfer ? 'TO' : 'Wallet',
+                                  isTransfer
+                                      ? data['toAccountType']
+                                      : data['fromAccountType'],
+                                  size),
                             ],
                           ),
                         ),
@@ -133,15 +169,15 @@ class DetailTransactionScreen extends StatelessWidget {
                     SizedBox(
                       height: size.height / 120,
                     ),
-                    const Text(
-                      'Amet minim mollit non  est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.',
+                     Text(
+                       data['description']??'No description added',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(
-                      height: size.height / 120,
+                      height: size.height / 20,
                     ),
                     const Text(
                       'Attachment',
@@ -181,34 +217,48 @@ class DetailTransactionScreen extends StatelessWidget {
               horizontal: size.width / 22, vertical: size.height / 55),
           child: CustomButton(
               text: 'Edit',
-              colorButton: Color(0xFFFD3C4A),
+              colorButton: color,
               colorText: ColorManager.lightBackground,
-              onTap: () {}),
+              onTap: () {
+                if(data['type']=='Expense'||data['type']=='Income'){
+                  Get.to(()=>EditeTransactionScreen(data: data,));
+                }else{
+
+                  Get.to(()=>EditeTransferTransactionScreen(data: data,));
+
+                }
+              }),
         ));
   }
 }
 
 Widget _transactionDetailItem(String label, String value, Size size) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Text(
-        label,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
+  return Expanded( // Auto-resize karne ke liye
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+          overflow: TextOverflow.ellipsis, // Agar text bada ho to ...
+          maxLines: 1, // Ek hi line me dikhana hai
         ),
-      ),
-      SizedBox(
-        height: size.height / 200,
-      ),
-      Text(
-        value,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+        SizedBox(
+          height: size.height / 200,
         ),
-      ),
-    ],
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          overflow: TextOverflow.ellipsis, // Overflow hone par truncate karega
+          maxLines: 1,
+        ),
+      ],
+    ),
   );
 }

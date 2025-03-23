@@ -1,17 +1,37 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spendo/home/screens/expense_screen.dart';
-import 'package:spendo/home/screens/income_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:spendo/home/controllers/transaction_controller.dart';
+import 'package:spendo/home/screens/common_transaction_screen.dart';
+import 'package:spendo/profile/controllers/total_balance_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TransactionController transactionController =
+      Get.put(TransactionController());
+
+  final TotalBalanceController totalBalanceController =
+      Get.put(TotalBalanceController());
+  int selectIndex = 0;
+  List days = [
+    'Today',
+    'Week',
+    'Month',
+    'Year',
+  ];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    transactionController.fetchFilteredTransactions(days[selectIndex]);
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
@@ -32,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                     const Color(0xFFFFF6E6),
                     const Color(0xFFF8EDD8).withOpacity(0.3),
                   ],
-                  stops: [0.0956, 1.0],
+                  stops: const [0.0956, 1.0],
                 ),
               ),
               child: Padding(
@@ -100,36 +120,52 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Transform.translate(
                       offset: const Offset(0, -10),
-                      child: const Text(
-                        'Rs9400',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 30),
-                      ),
+                      child: Obx(() => Text(
+                            '₹${totalBalanceController.totalBalance.value + transactionController.totalBalance.value}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color:
+                                  totalBalanceController.totalBalance.value < 0
+                                      ? const Color(0xFFFD3C4A)
+                                      : Colors.black,
+                            ),
+                          )),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: _buildCard(
+                    Obx(
+                      () => Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: _buildCard(
                               size: size,
                               title: 'Income',
-                              amount: 'Rs5000',
+                              amount: transactionController.totalIncome.value
+                                  .toString(),
                               color: const Color(0xFF00A86B),
                               icon: 'assets/icons/Income.png',
-                              onTab: () => Get.to(() => const IncomeScreen())),
-                        ),
-                        SizedBox(width: size.width / 30),
-                        Flexible(
-                          child: _buildCard(
+                              onTab: () => Get.to(() =>
+                                  const CommonTransactionScreen(
+                                      type: 'Income')),
+                            ),
+                          ),
+                          SizedBox(width: size.width / 30),
+                          Flexible(
+                            child: _buildCard(
                               size: size,
                               title: 'Expense',
-                              amount: 'Rs5000',
+                              amount: transactionController.totalExpense.value
+                                  .toString(),
                               color: const Color(0xFFFD3C4A),
                               icon: 'assets/icons/Income.png',
-                              onTab: () => Get.to(() => const ExpenseScreen())),
-                        ),
-                      ],
-                    ),
+                              onTab: () => Get.to(() =>
+                                  const CommonTransactionScreen(
+                                      type: 'Expense')),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -141,44 +177,49 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: size.width / 22, vertical: size.height / 70),
+                        horizontal: size.width / 22,
+                        vertical: size.height / 70),
                     child: const Text(
                       'Spend Frequency',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  CustomSpendFrequencyChartWidget(),
+                  const CustomSpendFrequencyChartWidget(),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: size.width / 22, vertical: size.width / 111),
+                        horizontal: size.width / 22,
+                        vertical: size.width / 111),
                     child: Row(
                       children: List.generate(4, (index) {
-                        int selectIndex = 0;
-                        List days = [
-                          'Today',
-                          'Week',
-                          'Month',
-                          'Year',
-                        ];
                         return Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: size.height / 19,
-                            width: size.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: selectIndex == index
-                                  ? ColorManager.primary.withOpacity(0.2)
-                                  : ColorManager.lightBackground,
-                            ),
-                            child: Text(
-                              days[index],
-                              style: TextStyle(
-                                  color: selectIndex == index
-                                      ? ColorManager.primary
-                                      : Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectIndex = index;
+                                transactionController
+                                    .fetchFilteredTransactions(days[index]);
+                              });
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: size.height / 19,
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: selectIndex == index
+                                    ? ColorManager.primary.withOpacity(0.2)
+                                    : ColorManager.lightBackground,
+                              ),
+                              child: Text(
+                                days[index],
+                                style: TextStyle(
+                                    color: selectIndex == index
+                                        ? ColorManager.primary
+                                        : Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12),
+                              ),
                             ),
                           ),
                         );
@@ -187,13 +228,15 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: size.width / 22, vertical: size.height / 75),
+                        horizontal: size.width / 22,
+                        vertical: size.height / 75),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           'Recent Transaction',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         Container(
                           alignment: Alignment.center,
@@ -215,94 +258,143 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: size.width / 22,
-                            vertical: size.height / 150),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size.width / 35,
-                            vertical: size.height / 50),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFAFAFA),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: size.height / 16,
-                              width: size.height / 16,
-                              decoration: BoxDecoration(
-                                color: ColorManager.primary.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/icons/profile.png',
-                                  width: size.height / 22,
-                                  height: size.height / 22,
-                                  fit: BoxFit.contain,
-                                ),
+                  transactionController.transactionsList.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(top: size.height / 20),
+                          child: const Center(
+                            child: Text(
+                              'No transactions available',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
                               ),
                             ),
-                            SizedBox(width: size.width / 30),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Shopping',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                          ),
+                        )
+                      : Obx(
+                          () => ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount:
+                                transactionController.transactionsList.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> data =
+                                  transactionController.transactionsList[index];
+
+                              String formattedAmount =
+                                  '${data['amount'] ?? '0'}';
+
+                              String formattedTime = '';
+                              DateTime dateTime = DateTime.parse(data['date']);
+                              formattedTime = DateFormat.jm().format(dateTime);
+
+                              bool isNegative = false;
+                              if (data['type'] == 'Expense' ||
+                                  data['type'] == 'Transfer') {
+                                isNegative = true;
+                              }
+
+                              Color amountColor = isNegative
+                                  ? const Color(0xFFFD3C4A)
+                                  : const Color(0xFF00A86B);
+
+                              return Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: size.width / 22,
+                                    vertical: size.height / 150),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.width / 35,
+                                    vertical: size.height / 50),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFAFAFA),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: size.height / 16,
+                                      width: size.height / 16,
+                                      decoration: BoxDecoration(
+                                        color: ColorManager.primary
+                                            .withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          'assets/icons/profile.png',
+                                          width: size.height / 22,
+                                          height: size.height / 22,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Buy some grocery',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: Color(0xFF91919F),
+                                    SizedBox(width: size.width / 30),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data['category'] == ''
+                                                ? 'Transfer'
+                                                : data['category'],
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            data['description'] == ''
+                                                ? 'Buy some grocery'
+                                                : data['description'],
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 13,
+                                              color: Color(0xFF91919F),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '- Rs120',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                  ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          isNegative
+                                              ? '-₹$formattedAmount'
+                                              : "₹$formattedAmount",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: amountColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          formattedTime,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF91919F),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '10:00 AM',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF91919F),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                              );
+                            },
+                          ),
+                        )
                 ],
               ),
             )
@@ -377,4 +469,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

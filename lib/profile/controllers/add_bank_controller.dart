@@ -52,6 +52,7 @@ class AddBankController extends GetxController {
             'balance': balance.value,
             'createdAt': FieldValue.serverTimestamp(),
           });
+
         }
       }
     } catch (e) {

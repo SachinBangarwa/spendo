@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spendo/auth/screens/pin_code_screen.dart';
 import 'package:spendo/commons/common_styles.dart';
 import 'package:spendo/profile/controllers/add_account_controller.dart';
 import 'package:spendo/profile/screens/account/add_bank_screen.dart';
@@ -19,10 +16,11 @@ class AddAccountScreen extends StatefulWidget {
 }
 
 class _AddAccountScreenState extends State<AddAccountScreen> {
-
-  final AddAccountController _addAccountController=Get.put(AddAccountController());
+  final AddAccountController _addAccountController =
+      Get.put(AddAccountController());
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _balanceController = TextEditingController(text: '0.0');
+  final TextEditingController _balanceController =
+      TextEditingController(text: '0.0');
   bool isBalanceEditable = false;
 
   @override
@@ -44,45 +42,42 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
         },
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Balance",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      height: 0,
-                      fontWeight: FontWeight.w600),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      '₹',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          height: 0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: size.width / 100,
-                    ),
-                    CommonStyles.buildBalanceTextField(
-                        size, _balanceController,RxDouble(0.0)),
-                  ],
-                )
-              ],
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Text(
+                    "Balance",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        height: 0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '₹',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: size.width / 100),
+                      CommonStyles.buildBalanceTextField(
+                          size, _balanceController, RxDouble(0.0)),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
-            height: size.height / 2.6,
             width: size.width,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -93,8 +88,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: size.width / 22, vertical: size.height / 55),
+                  horizontal: size.width / 22, vertical: size.height / 120),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(height: size.height / 35),
                   _buildTextField(size, _nameController, 'Name'),
@@ -112,32 +108,31 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                             DropdownMenuItem(value: type, child: Text(type)))
                         .toList(),
                     onChanged: (value) {
-                      _addAccountController.changeDropValue(value??'Bank');
+                      _addAccountController.changeDropValue(value ?? 'Bank');
                     },
                   ),
-                  const Spacer(),
+                  SizedBox(height: size.height / 35),
                   CustomButton(
                     text: 'Continue',
                     colorButton: ColorManager.primary,
                     colorText: ColorManager.lightBackground,
                     onTap: () async {
-
                       double balance =
                           double.tryParse(_balanceController.text) ?? 0.0;
-
-                      if (_addAccountController.selectedAccountType.value == 'Wallet') {
+                      if (_addAccountController.selectedAccountType.value ==
+                          'Wallet') {
                         Get.to(() => AddWalletScreen(
                               balance: balance.toString(),
                               name: _nameController.text,
                             ));
                       } else {
                         Get.to(() => AddBankScreen(
-                          balance: balance.toString(),
-                          name: _nameController.text,
-                        ));
+                              balance: balance.toString(),
+                              name: _nameController.text,
+                            ));
                       }
                     },
-                  )
+                  ),
                 ],
               ),
             ),

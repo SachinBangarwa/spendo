@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
+import 'package:spendo/profile/controllers/total_balance_controller.dart';
 import 'package:spendo/profile/screens/account/add_account_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
@@ -7,12 +9,14 @@ import 'package:spendo/widgets/custom_button_widget.dart';
 import '../../../widgets/common_appBar _widget.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  AccountScreen({super.key});
+
+  final TotalBalanceController totalBalanceController =
+      Get.put(TotalBalanceController());
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -20,7 +24,7 @@ class AccountScreen extends StatelessWidget {
         title: 'Account',
         backGroundCol: Colors.white,
         onBack: () {
-          Get.back();
+          Get.offAll(()=>DashBoardScreen());
         },
       ),
       body: Column(
@@ -29,45 +33,60 @@ class AccountScreen extends StatelessWidget {
           Text(
             'Account Balance',
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
+                color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: size.height * 0.01),
-          Text(
-            '\$9400',
-            style: TextStyle(
-              fontSize: size.width * 0.1,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
+          Obx(() => Expanded(
+            flex: 1,
+            child: Padding(
+              padding:  EdgeInsets.symmetric(horizontal: size.width/22),
+              child: Text(
+                "₹${totalBalanceController.totalBalance.value.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontSize: size.width * 0.1,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
             ),
+          )),
+          Divider(
+            height: size.height / 20,
+            color: Colors.black12.withOpacity(0.1),
           ),
-          Divider(height: size.height/20,color: Colors.black12.withOpacity(0.1),),
           Expanded(
-            child: ListView(
+            flex: 5,
+            child: Obx(() => ListView.builder(
+              itemCount: totalBalanceController.accountsList.length,
               padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-              children: [
-                buildAccountTile('Wallet', '\$400', 'assets/icons/wallet.png',size),
-                Divider(height: size.height/40,color: Colors.black12.withOpacity(0.1),),
-
-                buildAccountTile('Chase', '\$1000', 'assets/icons/Bank.png',size),
-                Divider(height: size.height/40,color: Colors.black12.withOpacity(0.1),),
-
-                buildAccountTile('Citi', '\$6000', 'assets/icons/Bank.png',size),
-                Divider(height: size.height/40,color: Colors.black12.withOpacity(0.1),),
-
-                buildAccountTile('Paypal', '\$2000', 'assets/icons/Bank1.png',size),
-              ],
-            ),
+              itemBuilder: (context, index) {
+                var account = totalBalanceController.accountsList[index];
+                return Column(
+                  children: [
+                    buildAccountTile(
+                      account['name'] ?? 'Unknown',
+                      '₹${account['balance'] ?? 0.0}',
+                      account['type'] == 'Bank' ? 'assets/icons/Bank.png' : 'assets/icons/wallet.png',
+                      size,
+                    ),
+                    Divider(
+                      height: size.height / 40,
+                      color: Colors.black12.withOpacity(0.1),
+                    ),
+                  ],
+                );
+              },
+            )),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.03,horizontal: size.width/22),
+            padding: EdgeInsets.symmetric(
+                vertical: size.height * 0.03, horizontal: size.width / 22),
             child: CustomButton(
               text: '+ Add new wallet',
               colorButton: ColorManager.primary,
               colorText: ColorManager.lightBackground,
               onTap: () {
-                Get.to(()=>AddAccountScreen());
+                Get.to(() => AddAccountScreen());
               },
             ),
           ),
@@ -76,7 +95,8 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget buildAccountTile(String title, String amount, String iconPath, Size size) {
+  Widget buildAccountTile(
+      String title, String amount, String iconPath, Size size) {
     return ListTile(
       leading: Container(
         width: size.width / 7,
@@ -93,8 +113,11 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,height: 0)),
-      trailing: Text(amount, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+      title: Text(title,
+          style:
+              TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0)),
+      trailing: Text(amount,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
     );
   }
 }

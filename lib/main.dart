@@ -1,22 +1,13 @@
-import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
-import 'package:spendo/auth/screens/change_password_screen.dart';
-import 'package:spendo/auth/screens/on_board_screen.dart';
-import 'package:spendo/auth/screens/pin_code_screen.dart';
-import 'package:spendo/auth/screens/sign_up_screen.dart';
-import 'package:spendo/auth/screens/verification_screen.dart';
-import 'package:spendo/dashboard/dash_board_screen.dart';
-import 'package:spendo/firebase_options.dart';
-import 'package:spendo/splash_screen.dart';
-import 'package:spendo/transaction/screens/financial_report_screen.dart';
 
-import 'dashboard/dash_board_screen.dart';
+import 'package:spendo/auth/screens/sign_up_screen.dart';
+
+import 'package:spendo/firebase_options.dart';
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
