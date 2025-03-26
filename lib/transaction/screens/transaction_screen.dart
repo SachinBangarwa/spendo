@@ -20,12 +20,31 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   List<String> frequencies = ['Today', 'Yesterday', 'Week', 'Month', 'Year'];
 
+  String selectedTransactionType = 'Income';
+  String? selectedCategory;
+  String sortBy = "'Highest'";
+
+  final List<String> incomeCategories = [
+    "Salary",
+    "Freelance",
+    "Investments",
+    "Gifts",
+    "Business"
+  ];
+
+  final List<String> expenseCategories = [
+    "Shopping",
+    "Food & Drinks",
+    "Transport",
+    "Entertainment",
+    "Health & Fitness"
+  ];
+
   String frequency = 'Year';
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    transactionController.fetchFilteredTransactions(frequency);
     return Scaffold(
         backgroundColor: ColorManager.lightBackground,
         body: Padding(
@@ -69,7 +88,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.only(right: size.width / 40,top: 2,bottom: 2),
+                      padding: EdgeInsets.only(
+                          right: size.width / 40, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                           border: Border.all(
                               width: 2, color: const Color(0xffcac0dd)),
@@ -92,190 +112,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   GestureDetector(
                     onTap: () {
                       showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (index) {
-                            return Container(
-                              height: size.height / 1.5,
-                              width: size.width,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width / 22),
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      topLeft: Radius.circular(30))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    child: Container(
-                                      margin: const EdgeInsets.all(6),
-                                      width: size.width / 8,
-                                      height: 5,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffddcef8),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                    ),
-                                  ),
-                                  SizedBox(height: size.height / 55),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Filter Transaction',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width / 35,
-                                            vertical: size.height / 150),
-                                        decoration: BoxDecoration(
-                                            color: const Color(0xffEEE5FF),
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: const Text(
-                                          'Reset',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff7F3DFF)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height / 55),
-                                  const Text(
-                                    'Filter By',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  SizedBox(height: size.height / 55),
-                                  Row(
-                                      children: List.generate(3, (index) {
-                                    List<String> type = [
-                                      'Income',
-                                      'Expense',
-                                      'Transfer',
-                                    ];
-                                    return GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width / 22,
-                                            vertical: size.height / 99),
-                                        margin: EdgeInsets.only(
-                                            right: size.width / 45),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 2,
-                                              color: const Color(0xffcac0dd)),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-
-                                          //  color: Color(0xFFA5BBB3)
-                                        ),
-                                        child: Text(
-                                          type[index],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xff1b1919)),
-                                        ),
-                                      ),
-                                    );
-                                  })),
-                                  SizedBox(height: size.height / 55),
-                                  const Text(
-                                    'Sort By',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  SizedBox(height: size.height / 55),
-                                  Wrap(
-                                      children: List.generate(4, (index) {
-                                    List<String> type = [
-                                      'Highest',
-                                      'Lowest',
-                                      'Newest',
-                                      'Oldest'
-                                    ];
-                                    return GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width / 22,
-                                            vertical: size.height / 99),
-                                        margin: EdgeInsets.only(
-                                            right: size.width / 45,
-                                            bottom: size.height / 65),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 2,
-                                              color: const Color(0xffcac0dd)),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-
-                                          //  color: Color(0xFFA5BBB3)
-                                        ),
-                                        child: Text(
-                                          type[index],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xff1b1919)),
-                                        ),
-                                      ),
-                                    );
-                                  })),
-                                  const Text(
-                                    'Category',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  SizedBox(height: size.height / 55),
-                                  const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Choses Category',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '0 Selected',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward_ios_sharp,
-                                            color: Color(0xff7F3DFF),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  CustomButton(
-                                      text: 'Apply',
-                                      colorButton: const Color(0xff7F3DFF),
-                                      colorText: ColorManager.lightBackground,
-                                      onTap: () {}),
-                                  SizedBox(height: size.height / 35),
-                                ],
-                              ),
-                            );
-                          });
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return buildBottomSheetFilter(size);
+                        },
+                      );
                     },
                     child: Container(
                         padding: EdgeInsets.all(size.width / 100),
@@ -347,19 +189,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
                       return transactionController.transactionsList.isEmpty
                           ? Padding(
-                            padding:  EdgeInsets.only(top: size.height/4),
-                            child: const Center(
-                                                    child: Text(
-                            'No transactions available',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                                                    ),
-                                                  ),
-                          )
-
+                              padding: EdgeInsets.only(top: size.height / 4),
+                              child: const Center(
+                                child: Text(
+                                  'No transactions available',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            )
                           : Column(
                               children:
                                   categorizedTransactions.entries.map((entry) {
@@ -382,7 +223,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       ),
                                     ),
                                     ListView.builder(
-                                      padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.only(
+                                          bottom: size.height / 20),
                                       shrinkWrap: true,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
@@ -467,7 +309,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                       const SizedBox(height: 4),
                                                       Text(
                                                         maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         data['description'] ==
                                                                 ''
                                                             ? 'Buy some grocery'
@@ -531,9 +374,236 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ));
   }
 
+  StatefulBuilder buildBottomSheetFilter(Size size) {
+    return StatefulBuilder(builder: (context, setModalState) {
+      return Container(
+        height:selectedTransactionType=='Transfer'? size.height / 1.8: size.height / 1.5,
+        width: size.width,
+        padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              child: Container(
+                margin: const EdgeInsets.all(6),
+                width: size.width / 8,
+                height: 5,
+                decoration: BoxDecoration(
+                    color: const Color(0xffddcef8),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+            SizedBox(height: size.height / 55),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Filter Transaction',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 35, vertical: size.height / 150),
+                  decoration: BoxDecoration(
+                      color: const Color(0xffEEE5FF),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: const Text(
+                    'Reset',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, color: Color(0xff7F3DFF)),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: size.height / 55),
+            const Text(
+              'Filter By',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: size.height / 55),
+            Row(
+                children: List.generate(3, (index) {
+              List<String> type = [
+                'Income',
+                'Expense',
+                'Transfer',
+              ];
+              return GestureDetector(
+                onTap: () {
+                  setModalState(() {
+                    selectedTransactionType = type[index];
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 22, vertical: size.height / 99),
+                  margin: EdgeInsets.only(right: size.width / 45),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1,
+                          color: selectedTransactionType == type[index]
+                              ? Color(0xffEEE5FF)
+                              : Color(0xffcac0dd)),
+                      borderRadius: BorderRadius.circular(20),
+                      color: selectedTransactionType == type[index]
+                          ? Color(0xffEEE5FF)
+                          : Color(0xFFFFFFFF)
+                      //  color: Color(0xFFA5BBB3)
+                      ),
+                  child: Text(
+                    type[index],
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: selectedTransactionType == type[index]
+                            ? Color(0xffa986ed)
+                            : Color(0xff1b1919)),
+                  ),
+                ),
+              );
+            })),
+            SizedBox(height: size.height / 55),
+            const Text(
+              'Sort By',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: size.height / 55),
+            Wrap(
+                children: List.generate(4, (index) {
+              List<String> type = ['Highest', 'Lowest', 'Newest', 'Oldest'];
+              return GestureDetector(
+                onTap: () {
+                  setModalState(() {
+                    sortBy = type[index];
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width / 22, vertical: size.height / 99),
+                  margin: EdgeInsets.only(
+                      right: size.width / 45, bottom: size.height / 65),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1,
+                          color: sortBy == type[index]
+                              ? Color(0xffEEE5FF)
+                              : Color(0xffcac0dd)),
+                      borderRadius: BorderRadius.circular(20),
+                      color: sortBy == type[index]
+                          ? Color(0xffEEE5FF)
+                          : Color(0xFFFFFFFF)),
+                  child: Text(
+                    type[index],
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: sortBy == type[index]
+                            ? Color(0xffa986ed)
+                            : Color(0xff1b1919)),
+                  ),
+                ),
+              );
+            })),
+            if (selectedTransactionType != 'Transfer') ...[
+              const Text(
+                'Category',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: size.height / 55),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Choose Category',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showMenu(
+                        shadowColor: Color(0xffcac0dd),
+                        context: context,
+                        color: Colors.white,
+                        position: RelativeRect.fromLTRB(
+                          size.width / 10,
+                          size.height / 2,
+                          size.width / 22,
+                          size.width / 22,
+                        ),
+                        items: selectedTransactionType == 'Income'
+                            ? incomeCategories.map((String category) {
+                                return PopupMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  onTap: () {
+                                    setModalState(() {
+                                      selectedCategory = category;
+                                    });
+                                  },
+                                );
+                              }).toList()
+                            : expenseCategories.map((String category) {
+                                return PopupMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  onTap: () {
+                                    setModalState(() {
+                                      selectedCategory = category;
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Selected',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: Color(0xff7F3DFF),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
+            const Spacer(),
+            CustomButton(
+                text: 'Apply',
+                colorButton: const Color(0xff7F3DFF),
+                colorText: ColorManager.lightBackground,
+                onTap: () {
+                  transactionController.fetchFilterTransaction(selectedCategory??'', selectedTransactionType, sortBy);
+                  Get.back();
+                }),
+            SizedBox(height: size.height / 35),
+          ],
+        ),
+      );
+    });
+  }
+
   String getTransactionHeader(DateTime date) {
     DateTime now = DateTime.now();
-    DateTime yesterday = now.subtract(Duration(days: 1));
+    DateTime today = DateTime(now.year, now.month, now.day);
+    DateTime yesterday = today.subtract(Duration(days: 1));
+    DateTime weekAgo = today.subtract(Duration(days: 7));
 
     if (date.year == now.year &&
         date.month == now.month &&
@@ -543,12 +613,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
         date.month == yesterday.month &&
         date.day == yesterday.day) {
       return "Yesterday";
+    } else if (date.isAfter(weekAgo)) {
+      return "Week";
     } else if (date.year == now.year && date.month == now.month) {
-      return "This Month";
+      return "Month";
     } else if (date.year == now.year) {
-      return "This Year";
+      return "Year";
     } else {
-      return DateFormat.yMMM().format(date);
+      return DateFormat.yMMM().format(date); // Older transactions
     }
   }
 }

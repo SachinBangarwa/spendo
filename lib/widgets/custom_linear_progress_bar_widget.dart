@@ -31,7 +31,7 @@ class CustomLinearProgressBarWidget extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: Color(0xFFFCFCFC),
-                      border: Border.all(width: 2, color: Colors.black12),
+                      border: Border.all(width: 2, color: Color(0xFFF1F1FA)),
                       borderRadius: BorderRadius.circular(20)),
                   child: Row(
                     children: [
@@ -65,7 +65,7 @@ class CustomLinearProgressBarWidget extends StatelessWidget {
               value:progress,
               minHeight: size.height/66,
               borderRadius: BorderRadius.circular(20),
-              backgroundColor: Colors.grey[300],
+              backgroundColor: Color(0xFFF1F1FA),
               valueColor: AlwaysStoppedAnimation( expense[index]['color'],),
             ),
           ],

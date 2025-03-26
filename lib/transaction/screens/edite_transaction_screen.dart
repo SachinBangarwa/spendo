@@ -73,13 +73,14 @@ class _EditTransactionScreenState extends State<EditeTransactionScreen> {
   List<String> frequencies = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
 
   List<String> wallets = [
-    "Cash",
-    "Bank Account",
-    "Credit Card",
-    "Savings",
-    "PayPal",
-    "Investment",
-    "Emergency Fund"
+    "Paytm Wallet",
+    "Google Pay Wallet",
+    "PhonePe Wallet",
+    "Amazon Pay Wallet",
+    "State Bank of India (SBI)",
+    "HDFC Bank",
+    "Punjab National Bank (PNB)",
+    "ICICI Bank"
   ];
 
   @override
@@ -173,7 +174,7 @@ class _EditTransactionScreenState extends State<EditeTransactionScreen> {
                       borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
-                          selectedCategory = value ?? "Food & Drinks";
+                          selectedCategory = value ?? "Salary";
                         });
                       },
                       hintText: "Category",
@@ -193,10 +194,10 @@ class _EditTransactionScreenState extends State<EditeTransactionScreen> {
                       borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
-                          selectedWallet = value ?? "Cash";
+                          selectedWallet = value ?? "Paytm Wallet";
                         });
                       },
-                      hintText: "Wallet",
+                      hintText: "Select Wallet",
                       size: size,
                     ),
                     SizedBox(

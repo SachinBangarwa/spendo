@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:spendo/home/controllers/transaction_controller.dart';
+
 
 class FinancialReportIncomeScreen extends StatelessWidget {
   const FinancialReportIncomeScreen({super.key});
@@ -6,13 +9,13 @@ class FinancialReportIncomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final TransactionController transactionController = Get.put(TransactionController());
+
     return Scaffold(
       backgroundColor: Color(0xFF00A86B),
       body: Column(
         children: [
-          SizedBox(
-            height: size.height / 6,
-          ),
+          SizedBox(height: size.height / 6),
           Center(
               child: Text(
                 "This Month",
@@ -22,80 +25,97 @@ class FinancialReportIncomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               )),
-          SizedBox(
-            height: size.height / 8,
-          ),
+          SizedBox(height: size.height / 8),
           Text(
             'You Earned💰',
             style: TextStyle(
-                fontSize: 36, fontWeight: FontWeight.w700, color: Colors.white),
+              fontSize: 36,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
           ),
-          Text(
-            '6000 ',
-            style: TextStyle(
-                fontSize: 64, fontWeight: FontWeight.w700, color: Colors.white),
-          ),
+
+          // **Dynamic Income Amount**
+          Obx(() {
+            double totalIncome = transactionController.totalIncome.value;
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+              child: Text(
+                '₹${totalIncome.toStringAsFixed(2)}',
+                maxLines: 1,
+                style: TextStyle(
+                  height: 0,
+                  fontSize: getDynamicFontSize(totalIncome),
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            );
+          }),
+
           Spacer(),
+
           Container(
-            margin: EdgeInsets.only(
-                left: size.width / 22,
-                right: size.width / 22,
-                bottom: size.height / 22),
+            margin: EdgeInsets.only(left: size.width / 22, right: size.width / 22, bottom: size.height / 22),
             padding: EdgeInsets.all(size.height / 45),
             width: double.infinity,
-
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30),
-                  topLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                )),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '   your biggest\n Income is from',
-                  style: TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.w700, height: 0),
+                  'Your biggest\n Income is from',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.2),
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(
-                  height: size.height / 66,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: size.height/77),
-                  margin: EdgeInsets.only(left: 40, right: 40),
-                  decoration: BoxDecoration(
-                      color: Color(0xFFE3E5E5),
-                      border: Border.all(color: Color(0xffcac0dd), width: 1),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                SizedBox(height: size.height / 66),
+
+                Obx(() {
+                  double biggestIncome = transactionController.biggestIncomeAmount.value;
+                  String category = transactionController.biggestIncomeCategory.value;
+
+                  return Column(
                     children: [
-                      Icon(
-                        Icons.shopping_cart_rounded,
-                        color: Colors.black,
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: size.height / 77),
+                        margin: EdgeInsets.symmetric(horizontal: size.width / 8),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFE3E5E5),
+                          border: Border.all(color: Color(0xffcac0dd), width: 1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.monetization_on, color: Colors.black),
+                            SizedBox(width: size.width / 77),
+                            Flexible(
+                              child: Text(
+                                category.isNotEmpty ? category : "N/A",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(width: size.width/77,),
+                      SizedBox(height: size.height / 180),
                       Text(
-                        'Salary',
+                        '₹${biggestIncome.toStringAsFixed(2)}',
                         style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 18),
-                      )
+                          fontSize: biggestIncome > 9999 ? 28 : 36,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-                SizedBox(height: size.height/180,),
-                Text(
-                  "\$220",
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+                  );
+                })
+
               ],
             ),
           ),
@@ -103,4 +123,14 @@ class FinancialReportIncomeScreen extends StatelessWidget {
       ),
     );
   }
+  double getDynamicFontSize(double amount) {
+    if (amount > 999999) {
+      return 32;
+    } else if (amount > 99999) {
+      return 40;
+    } else {
+      return 60;
+    }
+  }
+
 }

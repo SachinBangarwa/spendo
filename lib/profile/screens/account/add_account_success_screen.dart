@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/profile/screens/account/account_screen.dart';
-import 'package:spendo/profile/screens/profile_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 
 class AddAccountSuccessScreen extends StatefulWidget {
@@ -20,11 +20,15 @@ class _AddAccountSuccessScreenState extends State<AddAccountSuccessScreen> {
     super.initState();
     moveAccountScreen();
   }
-
   Future moveAccountScreen() async {
-    await Future.delayed(const Duration(seconds: 5));
-    Get.offAll(() => AccountScreen());
+    await Future.delayed(const Duration(seconds: 2));
+    Get.to(() => AccountScreen())!.then((_) {
+      Get.offAll(() => DashBoardScreen(selectedIndex: 3));
+    });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -10,6 +10,10 @@ class TransactionController extends GetxController {
   RxDouble totalExpense = 0.0.obs;
   RxDouble totalTransfer = 0.0.obs;
   RxDouble totalBalance = 0.0.obs;
+  RxString biggestIncomeCategory = "".obs;
+  RxDouble biggestIncomeAmount = 0.0.obs;
+  RxString biggestExpenseCategory = "".obs;
+  RxDouble biggestExpenseAmount = 0.0.obs;
 
   @override
   void onInit() {
@@ -31,30 +35,88 @@ class TransactionController extends GetxController {
           double expense = 0.0;
           double transfer = 0.0;
 
+          Map<String, double> expenseCategoryMap = {};
+          Map<String, double> incomeCategoryMap = {};
+
           for (var doc in snapShot.docs) {
             Map<String, dynamic> data = doc.data();
-            print("Fetched Transaction: $data");
-
             tempList.add(data);
 
             if (data['type'] == 'Income') {
-              income += data['amount'].toDouble();
+              double amount = data['amount'].toDouble();
+              String category = data['category'];
+              income += amount;
+
+              incomeCategoryMap[category] =
+                  (incomeCategoryMap[category] ?? 0) + amount;
             } else if (data['type'] == 'Expense') {
-              expense += data['amount'].toDouble();
-            } else {
+              double amount = data['amount'].toDouble();
+              String category = data['category'];
+              expense += amount;
+
+              expenseCategoryMap[category] =
+                  (expenseCategoryMap[category] ?? 0) + amount;
+            } else if (data['type'] == 'Transfer') {
               transfer += data['amount'].toDouble();
+              expenseCategoryMap["Transfer"] =
+                  (expenseCategoryMap["Transfer"] ?? 0) +
+                      data['amount'].toDouble();
             }
+          }
+
+          print("Expense Category Breakdown: $expenseCategoryMap");
+          print("Income Category Breakdown: $incomeCategoryMap");
+
+          if (expenseCategoryMap.isNotEmpty) {
+            var maxEntry = expenseCategoryMap.entries
+                .reduce((a, b) => a.value > b.value ? a : b);
+            biggestExpenseCategory.value = maxEntry.key;
+            biggestExpenseAmount.value = maxEntry.value;
+          } else {
+            biggestExpenseCategory.value = "N/A";
+            biggestExpenseAmount.value = 0.0;
+          }
+
+          if (incomeCategoryMap.isNotEmpty) {
+            var maxEntry = incomeCategoryMap.entries
+                .reduce((a, b) => a.value > b.value ? a : b);
+            biggestIncomeCategory.value = maxEntry.key;
+            biggestIncomeAmount.value = maxEntry.value;
+          } else {
+            biggestIncomeCategory.value = "N/A";
+            biggestIncomeAmount.value = 0.0;
           }
 
           transactionsList.value = tempList;
           totalIncome.value = income;
-          totalExpense.value = expense;
+          totalExpense.value = expense + transfer;
           totalTransfer.value = transfer;
           totalBalance.value = income - (expense + transfer);
+
+          print(
+              "Biggest Income Source: ${biggestIncomeCategory.value} - ${biggestIncomeAmount.value}");
+          print(
+              "Biggest Expense Source: ${biggestExpenseCategory.value} - ${biggestExpenseAmount.value}");
         });
       }
     } catch (e) {
       print('Error fetching transactions: $e');
+    }
+  }
+
+  Future deleteTransaction(String transactionId) async {
+    try {
+      if (user != null) {
+        await fireStore
+            .collection('users')
+            .doc(user!.uid)
+            .collection('transactions')
+            .doc(transactionId)
+            .delete();
+      }
+      print("Transaction deleted successfully");
+    } catch (e) {
+      print("Error deleting transaction: $e");
     }
   }
 
@@ -99,22 +161,6 @@ class TransactionController extends GetxController {
     } catch (e) {}
   }
 
-  Future deleteTransaction(String transactionId) async {
-    try {
-      if (user != null) {
-        await fireStore
-            .collection('users')
-            .doc(user!.uid)
-            .collection('transactions')
-            .doc(transactionId)
-            .delete();
-      }
-      print("Transaction deleted successfully");
-    } catch (e) {
-      print("Error deleting transaction: $e");
-    }
-  }
-
   Future<void> upDateTransaction({
     required String transactionId,
     required double amount,
@@ -138,7 +184,6 @@ class TransactionController extends GetxController {
             .doc(user!.uid)
             .collection('transactions');
         DocumentReference documentReference = reference.doc(transactionId);
-print('isRepeat$isRepeat');
         documentReference.update({
           "transactionId": documentReference.id,
           "amount": amount,
@@ -158,13 +203,38 @@ print('isRepeat$isRepeat');
               "frequency": frequency,
               "startDate": startDate,
               "endDate": endDate,
-            } else
+            }
+          else
             "repeat": FieldValue.delete(),
         });
         print("Transaction added successfully!");
       }
     } catch (e) {
       print("Error adding transaction: $e");
+    }
+  }
+
+  Future fetchFilterTransaction(
+      String category, String type, String sortBy) async {
+    try {
+      if (user != null) {
+        CollectionReference reference = fireStore
+            .collection('users')
+            .doc(user!.uid)
+            .collection('transactions');
+
+        Query query = reference
+            .where("category", isEqualTo: category)
+            .where("type", isEqualTo: type)
+            .orderBy("date", descending: true);
+
+        QuerySnapshot snapshot = await query.get();
+        transactionsList.assignAll(snapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList());
+      }
+    } catch (e) {
+      print("Error fetching transactions: $e");
     }
   }
 }

@@ -10,8 +10,11 @@ import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/transaction_screen.dart';
 
 class DashBoardScreen extends StatelessWidget {
-  DashBoardScreen({super.key});
+  final int selectedIndex;
 
+  DashBoardScreen({super.key, this.selectedIndex = 0}) {
+    controller.selectedIndex.value = selectedIndex;
+  }
   final DashBoardController controller = Get.put(DashBoardController());
 
   final List<Widget> screens = [

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/profile/controllers/total_balance_controller.dart';
 import 'package:spendo/profile/screens/account/add_account_screen.dart';
+import 'package:spendo/profile/screens/account/detail_account_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
@@ -24,13 +24,13 @@ class AccountScreen extends StatelessWidget {
         title: 'Account',
         backGroundCol: Colors.white,
         onBack: () {
-          Get.offAll(()=>DashBoardScreen());
+          Get.back();
         },
       ),
       body: Column(
         children: [
           SizedBox(height: size.height * 0.02),
-          Text(
+          const Text(
             'Account Balance',
             style: TextStyle(
                 color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500),
@@ -56,27 +56,36 @@ class AccountScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: Obx(() => ListView.builder(
-              itemCount: totalBalanceController.accountsList.length,
-              padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-              itemBuilder: (context, index) {
-                var account = totalBalanceController.accountsList[index];
-                return Column(
-                  children: [
-                    buildAccountTile(
-                      account['name'] ?? 'Unknown',
-                      '₹${account['balance'] ?? 0.0}',
-                      account['type'] == 'Bank' ? 'assets/icons/Bank.png' : 'assets/icons/wallet.png',
-                      size,
-                    ),
-                    Divider(
-                      height: size.height / 40,
-                      color: Colors.black12.withOpacity(0.1),
-                    ),
-                  ],
+            child: Obx(() {
+              if (totalBalanceController.accountsList.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No accounts available",
+                    style: TextStyle(fontSize: 18, color: Colors.black54),
+                  ),
                 );
-              },
-            )),
+              }
+              return ListView.builder(
+                itemCount: totalBalanceController.accountsList.length,
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                itemBuilder: (context, index) {
+                  Map<String,dynamic> account = totalBalanceController.accountsList[index];
+                  return Column(
+                    children: [
+                      buildAccountTile(
+                      account,
+                        account['type'] == 'Bank' ? 'assets/icons/Bank.png' : 'assets/icons/wallet.png',
+                        size,
+                      ),
+                      Divider(
+                        height: size.height / 40,
+                        color: Colors.black12.withOpacity(0.1),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -96,8 +105,11 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget buildAccountTile(
-      String title, String amount, String iconPath, Size size) {
+      Map<String,dynamic> account, String iconPath, Size size) {
     return ListTile(
+      onTap: (){
+        Get.to(()=>DetailAccountScreen(account: account,));
+      },
       leading: Container(
         width: size.width / 7,
         height: size.width / 7,
@@ -113,10 +125,10 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(title,
+      title: Text( account['name'] ?? 'Unknown',
           style:
               TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0)),
-      trailing: Text(amount,
+      trailing: Text('₹${account['balance'] ?? 0.0}',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
     );
   }

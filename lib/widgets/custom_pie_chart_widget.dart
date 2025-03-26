@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class CustomPieChartWidget extends StatelessWidget {
-  final double amount;
+  final double incomeAmount;
+  final double expenseAmount;
+  final String type;
 
-  const CustomPieChartWidget({super.key, required this.amount});
+  const CustomPieChartWidget({super.key,required this.incomeAmount, required this.expenseAmount, required this.type});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    double fontSize = calculateFontSize(amount, size.width);
+    double fontSize = calculateFontSize(type=="Expense"?expenseAmount:incomeAmount, size.width);
 
     return Center(
       child: Stack(
@@ -43,7 +45,7 @@ class CustomPieChartWidget extends StatelessWidget {
             ),
           ),
           Text(
-            '₹${amount.toStringAsFixed(0)}',  // INR symbol added
+            '₹${type=="Expense"?expenseAmount:incomeAmount.toStringAsFixed(0)}',  // INR symbol added
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: fontSize,

@@ -11,7 +11,7 @@ class AddTransactionController extends GetxController {
     required String description,
     required String fromAccountId,
     required String fromAccountType,
-    String? category,
+    required String category,
     String? toAccountId,
     String? toAccountType,
     String? imageUrl,
@@ -23,37 +23,71 @@ class AddTransactionController extends GetxController {
   }) async {
     try {
       if (user != null) {
-        CollectionReference reference = _fireStore
+        CollectionReference transactionsRef = _fireStore
             .collection('users')
             .doc(user!.uid)
             .collection('transactions');
-        DocumentReference documentReference = reference.doc();
 
-        documentReference.set({
-          "transactionId": documentReference.id,
-          "amount": amount,
-          "category": category,
-          "description": description,
-          "date": DateTime.now().toIso8601String(),
-          "fromAccountId": fromAccountId,
-          "fromAccountType": fromAccountType,
-          "toAccountId": toAccountId,
-          "toAccountType": toAccountType,
-          "type": type,
-          "userId": user!.uid,
-          "imageUrl": imageUrl,
-          if (isRepeat)
-            "repeat": {
-              "isRepeat": isRepeat,
-              "frequency": frequency,
-              "startDate": startDate,
-              "endDate": endDate,
-            }
-        });
-        print("Transaction added successfully!");
+        QuerySnapshot existingTransactions = await transactionsRef
+            .where("category", isEqualTo: category)
+            .where("type", isEqualTo: type)
+            .get();
+
+        if (existingTransactions.docs.isNotEmpty) {
+          DocumentReference existingDoc =
+              existingTransactions.docs.first.reference;
+
+          await existingDoc.update({
+            "amount": FieldValue.increment(amount),
+            "description": description,
+            "fromAccountId": fromAccountId,
+            "fromAccountType": fromAccountType,
+            "toAccountId": toAccountId,
+            "toAccountType": toAccountType,
+            "imageUrl": imageUrl,
+            "date": DateTime.now().toIso8601String(),
+            if (isRepeat)
+              "repeat": {
+                "isRepeat": isRepeat,
+                "frequency": frequency,
+                "startDate": startDate,
+                "endDate": endDate,
+              }
+            else
+              "repeat": FieldValue.delete(),
+          });
+
+          print(" Existing transaction updated successfully!");
+        } else {
+          DocumentReference newTransaction = transactionsRef.doc();
+
+          await newTransaction.set({
+            "transactionId": newTransaction.id,
+            "amount": amount,
+            "category": category,
+            "description": description,
+            "date": DateTime.now().toIso8601String(),
+            "fromAccountId": fromAccountId,
+            "fromAccountType": fromAccountType,
+            "toAccountId": toAccountId,
+            "toAccountType": toAccountType,
+            "type": type,
+            "userId": user!.uid,
+            "imageUrl": imageUrl,
+            if (isRepeat)
+              "repeat": {
+                "isRepeat": isRepeat,
+                "frequency": frequency,
+                "startDate": startDate,
+                "endDate": endDate,
+              }
+          });
+
+          print(" New transaction added successfully!");
+        }
       }
     } catch (e) {
-      print("Error adding transaction: $e");
+      print(" Error adding/updating transaction: $e");
     }
   }
 

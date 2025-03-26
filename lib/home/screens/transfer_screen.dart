@@ -23,14 +23,25 @@ class TransferScreen extends StatefulWidget {
 
 class _IncomeScreenState extends State<TransferScreen> {
   final TextEditingController descController = TextEditingController();
-  final TextEditingController amountController = TextEditingController(text: '0.0');
-  final TextEditingController fromController = TextEditingController(text: 'Chase');
-  final TextEditingController toController = TextEditingController(text: 'Citi');
+  final TextEditingController amountController =
+      TextEditingController(text: '0.0');
+  final TextEditingController fromController =
+      TextEditingController(text: "HDFC Bank");
+  final TextEditingController toController = TextEditingController(text:"ICICI Bank");
   final AttachmentController attachmentController =
       Get.put(AttachmentController());
 
   final AddTransactionController addTransactionController =
       Get.put(AddTransactionController());
+
+  @override
+  void dispose() {
+    super.dispose();
+    descController.dispose();
+    amountController.dispose();
+    fromController.dispose();
+    toController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -323,30 +334,29 @@ class _IncomeScreenState extends State<TransferScreen> {
                         onTap: () async {
                           double? amount =
                               double.tryParse(amountController.text);
-                          if (amount == null || amount<=0.0 ) {
+                          if (amount == null || amount <= 0.0) {
                             showCustomSnackBar(
                                 'Error', 'Please enter a valid amount',
                                 isSuccess: false);
-                          }else if(
-                          descController.text.isEmpty
-                          ){
+                          } else if (descController.text.isEmpty) {
                             showCustomSnackBar(
                                 'Error', 'Please enter a description',
                                 isSuccess: false);
-                          }
-                          else {
-                         String? fromId=   await  addTransactionController.getAccountIdByName(fromController.text.trim());
-                         String? toId=   await  addTransactionController.getAccountIdByName(toController.text.trim());
+                          } else {
+                            String? fromId = await addTransactionController
+                                .getAccountIdByName(fromController.text.trim());
+                            String? toId = await addTransactionController
+                                .getAccountIdByName(toController.text.trim());
                             await addTransactionController
                                 .addTransaction(
                               amount: amount,
                               category: '',
                               description: descController.text,
-                              fromAccountId:fromId??'',
+                              fromAccountId: fromId ?? '',
                               fromAccountType: fromController.text,
                               type: 'Transfer',
                               imageUrl: attachmentController.path.value ?? '',
-                              toAccountId: toId??'',
+                              toAccountId: toId ?? '',
                               toAccountType: toController.text,
                             )
                                 .then((onValue) {
@@ -357,7 +367,7 @@ class _IncomeScreenState extends State<TransferScreen> {
                                 },
                               );
 
-                              Future.delayed(const Duration(seconds: 3), () {
+                              Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.pop(context);
                                 Get.offAll(() => DashBoardScreen());
                               });

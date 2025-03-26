@@ -7,34 +7,31 @@ import 'package:spendo/widgets/custom_button_widget.dart';
 import '../../../widgets/common_appBar _widget.dart';
 import 'package:spendo/profile/controllers/add_wallet_controller.dart';
 
-class AddWalletScreen extends StatefulWidget {
-  final String? name;
-  final dynamic balance;
+class EditWalletScreen extends StatefulWidget {
+  final Map<String, dynamic> account;
 
-  const AddWalletScreen({super.key, required this.name, required this.balance});
+  const EditWalletScreen({
+    super.key,
+    required this.account,
+  });
 
   @override
-  State<AddWalletScreen> createState() => _AddWalletScreenState();
+  State<EditWalletScreen> createState() => _EditWalletScreenState();
 }
 
-class _AddWalletScreenState extends State<AddWalletScreen> {
+class _EditWalletScreenState extends State<EditWalletScreen> {
   final AddWalletController _walletController = Get.put(AddWalletController());
 
-  final TextEditingController _balanceController = TextEditingController();
+  late TextEditingController _balanceController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
-    double initialBalance = double.tryParse(widget.balance.toString()) ?? 0.0;
-    _walletController.balance.value = initialBalance;
-    _balanceController.text = initialBalance.toString();
-
-    _walletController.selectedAccountName.value =
-        widget.name != null && _walletController.banks.contains(widget.name)
-            ? widget.name!
-            : "Select Wallet";
+    _balanceController =
+        TextEditingController(text: widget.account['balance'].toString() ?? '0.0');
+    _walletController.selectedAccountName.value = widget.account['name']??'Paytm Wallet';
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -42,6 +39,7 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
     _walletController.dispose();
     _balanceController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -50,13 +48,25 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
       backgroundColor: ColorManager.primary,
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(
-        title: 'Add new Wallet',
+        title: 'Edit Wallet',
         backGroundCol: ColorManager.primary,
         iconColor: Colors.white,
         textColor: Colors.white,
         onBack: () async {
           FocusScope.of(context).unfocus();
           await Future.delayed(const Duration(milliseconds: 300));
+          Get.back();
+        },
+        trailing: Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+          child: const Icon(
+            Icons.delete_rounded,
+            color: Colors.white,
+          ),
+        ),
+        onTrailingTap: (){
+          _walletController.removeWallet(widget.account['accountId']);
+          Get.back();
           Get.back();
         },
       ),
@@ -120,28 +130,28 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
                       size, 'Wallet Name', _walletController.walletName),
                   SizedBox(height: size.height / 40),
                   Obx(() {
-
                     return DropdownButtonFormField<String>(
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-
-                      value: _walletController.banks.contains(_walletController.selectedAccountName.value)
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                      value: _walletController.banks.contains(
+                              _walletController.selectedAccountName.value)
                           ? _walletController.selectedAccountName.value
                           : null,
-                      decoration: CommonStyles.inputDecoration('Select Wallet', size),
-
+                      decoration:
+                          CommonStyles.inputDecoration('Select Wallet', size),
                       items: _walletController.banks
-                          .map((bank) => DropdownMenuItem(value: bank, child: Text(bank)))
+                          .map((bank) =>
+                              DropdownMenuItem(value: bank, child: Text(bank)))
                           .toList(),
-
                       onChanged: (value) {
                         if (value != null) {
                           _walletController.changeSelectedAccount(value);
                         }
                       },
                     );
-                  })
-
-                  ,
+                  }),
                   SizedBox(height: size.height / 20),
                   _buildBankIcons(size),
                   Spacer(),
@@ -154,7 +164,7 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
                           double.tryParse(_balanceController.text) ?? 0.0;
                       if (double.parse(_balanceController.text) > 0) {
                         await _walletController
-                            .saveWalletToFirebase()
+                            .updateWallet(widget.account["accountId"])
                             .then((onValue) async {
                           Get.offAll(() => const AddAccountSuccessScreen());
                         });
@@ -172,8 +182,8 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
 
   Widget _buildTextField(Size size, String hintText, RxString value) {
     return Obx(() => TextFormField(
-      readOnly: true,
-      enabled: false,
+          readOnly: true,
+          enabled: false,
           initialValue: value.value,
           style: const TextStyle(fontWeight: FontWeight.w600),
           decoration: CommonStyles.inputDecoration(hintText, size),

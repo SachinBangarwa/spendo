@@ -21,12 +21,13 @@ class CommonTransactionScreen extends StatefulWidget {
   const CommonTransactionScreen({super.key, required this.type});
 
   @override
-  State<CommonTransactionScreen> createState() => _IncomeScreenState();
+  State<CommonTransactionScreen> createState() => _CommonTransactionScreen();
 }
 
-class _IncomeScreenState extends State<CommonTransactionScreen> {
+class _CommonTransactionScreen extends State<CommonTransactionScreen> {
   final TextEditingController descController = TextEditingController();
-  final TextEditingController amountController = TextEditingController(text: '0.0');
+  final TextEditingController amountController =
+      TextEditingController(text: '0.0');
   final AttachmentController attachmentController =
       Get.put(AttachmentController());
 
@@ -58,14 +59,23 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
   List<String> frequencies = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
 
   List<String> wallets = [
-    "Cash",
-    "Bank Account",
-    "Credit Card",
-    "Savings",
-    "PayPal",
-    "Investment",
-    "Emergency Fund"
+    "Paytm Wallet",
+    "Google Pay Wallet",
+    "PhonePe Wallet",
+    "Amazon Pay Wallet",
+    "State Bank of India (SBI)",
+    "HDFC Bank",
+    "Punjab National Bank (PNB)",
+    "ICICI Bank"
   ];
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    descController.dispose();
+    amountController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +168,7 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                       borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
-                          selectedCategory = value ?? "Food & Drinks";
+                          selectedCategory = value ?? "Salary";
                         });
                       },
                       hintText: "Category",
@@ -178,10 +188,10 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                       borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
-                          selectedWallet = value ?? "Cash";
+                          selectedWallet = value ?? "Paytm Wallet";
                         });
                       },
-                      hintText: "Wallet",
+                      hintText: " Select Wallet",
                       size: size,
                     ),
                     SizedBox(
@@ -203,11 +213,15 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                                   ),
                                   child: attachmentController.isImage()
                                       ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                        child: Image.file(
-                                            File(attachmentController.path.value),
-                                            fit: BoxFit.cover,height: size.height / 8,),
-                                      )
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.file(
+                                            File(attachmentController
+                                                .path.value),
+                                            fit: BoxFit.cover,
+                                            height: size.height / 8,
+                                          ),
+                                        )
                                       : Center(
                                           child: Column(
                                             mainAxisAlignment:
@@ -376,7 +390,7 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                             );
                     }),
                     SizedBox(
-                      height: size.width/55,
+                      height: size.width / 55,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -511,7 +525,9 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                         onTap: () async {
                           double? amount =
                               double.tryParse(amountController.text);
-                          if (amount == null || amountController.text.isEmpty||amount<=0.0) {
+                          if (amount == null ||
+                              amountController.text.isEmpty ||
+                              amount <= 0.0) {
                             showCustomSnackBar(
                                 'Error', 'Please enter a valid amount',
                                 isSuccess: false);
@@ -548,7 +564,7 @@ class _IncomeScreenState extends State<CommonTransactionScreen> {
                                 },
                               );
 
-                              Future.delayed(const Duration(seconds: 3), () {
+                              Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.pop(context);
                                 Get.offAll(() => DashBoardScreen());
                               });
