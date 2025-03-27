@@ -93,10 +93,6 @@ class TransactionController extends GetxController {
           totalTransfer.value = transfer;
           totalBalance.value = income - (expense + transfer);
 
-          print(
-              "Biggest Income Source: ${biggestIncomeCategory.value} - ${biggestIncomeAmount.value}");
-          print(
-              "Biggest Expense Source: ${biggestExpenseCategory.value} - ${biggestExpenseAmount.value}");
         });
       }
     } catch (e) {

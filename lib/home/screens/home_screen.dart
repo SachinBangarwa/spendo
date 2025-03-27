@@ -8,6 +8,8 @@ import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/detail_transaction_screen.dart';
 import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
 
+import '../controllers/home_transaction_controller.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -18,10 +20,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TransactionController transactionController =
       Get.put(TransactionController());
+  final HomeTransactionController homeTransactionController =
+      Get.put(HomeTransactionController());
 
   final TotalBalanceController totalBalanceController =
       Get.put(TotalBalanceController());
-  int selectIndex = 0;
+  int selectIndex = 3;
   List days = [
     'Today',
     'Week',
@@ -30,9 +34,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeTransactionController.fetchFilteredTransactions(days[selectIndex]);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    transactionController.fetchFilteredTransactions(days[selectIndex]);
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -61,8 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(
-                        left: size.width / 22,
-                        right: size.width / 22),
+                        left: size.width / 22, right: size.width / 22),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -128,10 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 30,
-                                  color:
-                                      totalBalanceController.totalBalance.value < 0
-                                          ? const Color(0xFFFD3C4A)
-                                          : Colors.black,
+                                  color: totalBalanceController
+                                              .totalBalance.value <
+                                          0
+                                      ? const Color(0xFFFD3C4A)
+                                      : Colors.black,
                                 ),
                               )),
                         ),
@@ -143,7 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: _buildCard(
                                   size: size,
                                   title: 'Income',
-                                  amount: transactionController.totalIncome.value
+                                  amount: transactionController
+                                      .totalIncome.value
                                       .toString(),
                                   color: const Color(0xFF00A86B),
                                   icon: 'assets/icons/Income.png',
@@ -157,7 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: _buildCard(
                                   size: size,
                                   title: 'Expense',
-                                  amount: transactionController.totalExpense.value
+                                  amount: transactionController
+                                      .totalExpense.value
                                       .toString(),
                                   color: const Color(0xFFFD3C4A),
                                   icon: 'assets/icons/Income.png',
@@ -175,19 +187,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: size.width / 22,
-                      vertical: size.height / 70),
+                      horizontal: size.width / 22, vertical: size.height / 70),
                   child: const Text(
                     'Spend Frequency',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
-                const CustomSpendFrequencyChartWidget(),
+                // const CustomSpendFrequencyChartWidget(),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: size.width / 22,
-                      vertical: size.width / 111),
+                      horizontal: size.width / 22, vertical: size.width / 111),
                   child: Row(
                     children: List.generate(4, (index) {
                       return Expanded(
@@ -195,8 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             setState(() {
                               selectIndex = index;
-                              transactionController
-                                  .fetchFilteredTransactions(days[index]);
+                              homeTransactionController.fetchFilteredTransactions(days[selectIndex]);
                             });
                           },
                           child: Container(
@@ -226,8 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: size.width / 22,
-                      vertical: size.height / 75),
+                      horizontal: size.width / 22, vertical: size.height / 75),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -257,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Obx(() {
-                  if (transactionController.transactionsList.isEmpty) {
+                  if (homeTransactionController.transactionsList.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.only(top: size.height / 30),
                       child: const Center(
@@ -273,27 +280,36 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   } else {
                     return ListView.builder(
-                      padding: EdgeInsets.only(bottom: size.height/14),
+                      padding: EdgeInsets.only(bottom: size.height / 14),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: transactionController.transactionsList.length,
+                      itemCount:
+                          homeTransactionController.transactionsList.length,
                       itemBuilder: (context, index) {
-                        Map<String, dynamic> data = transactionController.transactionsList[index];
-      
+                        Map<String, dynamic> data =
+                            homeTransactionController.transactionsList[index];
+
                         String formattedAmount = '${data['amount'] ?? '0'}';
                         DateTime dateTime = DateTime.parse(data['date']);
                         String formattedTime = DateFormat.jm().format(dateTime);
-      
-                        bool isNegative = (data['type'] == 'Expense' || data['type'] == 'Transfer');
-                        Color amountColor = isNegative ? const Color(0xFFFD3C4A) : const Color(0xFF00A86B);
-      
+
+                        bool isNegative = (data['type'] == 'Expense' ||
+                            data['type'] == 'Transfer');
+                        Color amountColor = isNegative
+                            ? const Color(0xFFFD3C4A)
+                            : const Color(0xFF00A86B);
+
                         return GestureDetector(
                           onTap: () {
                             Get.to(() => DetailTransactionScreen(data: data));
                           },
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: size.width / 22, vertical: size.height / 150),
-                            padding: EdgeInsets.symmetric(horizontal: size.width / 35, vertical: size.height / 50),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: size.width / 22,
+                                vertical: size.height / 150),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width / 35,
+                                vertical: size.height / 50),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFAFAFA),
                               borderRadius: BorderRadius.circular(20),
@@ -305,7 +321,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: size.height / 16,
                                   width: size.height / 16,
                                   decoration: BoxDecoration(
-                                    color: ColorManager.primary.withOpacity(0.2),
+                                    color:
+                                        ColorManager.primary.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Center(
@@ -320,18 +337,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(width: size.width / 30),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        data['category'].isEmpty ? 'Transfer' : data['category'],
-                                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
+                                        data['category'].isEmpty
+                                            ? 'Transfer'
+                                            : data['category'],
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        data['description'].isEmpty ? 'Buy some grocery' : data['description'],
-                                        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Color(0xFF91919F)),
+                                        data['description'].isEmpty
+                                            ? 'Buy some grocery'
+                                            : data['description'],
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Color(0xFF91919F)),
                                       ),
                                     ],
                                   ),
@@ -340,13 +368,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      isNegative ? '-₹$formattedAmount' : "₹$formattedAmount",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: amountColor),
+                                      isNegative
+                                          ? '-₹$formattedAmount'
+                                          : "₹$formattedAmount",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: amountColor),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       formattedTime,
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF91919F)),
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF91919F)),
                                     ),
                                   ],
                                 ),
@@ -418,7 +454,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Flexible(
                     child: Text(
-                      maxLines: 1,overflow: TextOverflow.visible,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
                       amount,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
