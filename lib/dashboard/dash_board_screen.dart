@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:spendo/budget/screens/budget_screen.dart';
 import 'package:spendo/dashboard/controllers/dash_board_controller.dart';
+import 'package:spendo/home/screens/common_transaction_screen.dart';
 import 'package:spendo/home/screens/home_screen.dart';
 import 'package:spendo/home/screens/transfer_screen.dart';
 import 'package:spendo/profile/screens/profile_screen.dart';
@@ -15,6 +16,7 @@ class DashBoardScreen extends StatelessWidget {
   DashBoardScreen({super.key, this.selectedIndex = 0}) {
     controller.selectedIndex.value = selectedIndex;
   }
+
   final DashBoardController controller = Get.put(DashBoardController());
 
   final List<Widget> screens = [
@@ -28,6 +30,7 @@ class DashBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: ColorManager.lightBackground,
       floatingActionButton: _buildSpeedDial(size),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -40,7 +43,7 @@ class DashBoardScreen extends StatelessWidget {
               'assets/icons/Subtract.png',
               width: double.infinity,
               fit: BoxFit.cover,
-              color: Color(0xFFFCFCFC),
+              color: const Color(0xFFFCFCFC),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -83,7 +86,7 @@ class DashBoardScreen extends StatelessWidget {
                   child: Image.asset(
                     'assets/icons/$icon.png',
                     color: controller.selectedIndex.value == index
-                        ? Color(0xFF7F3DFF)
+                        ? const Color(0xFF7F3DFF)
                         : const Color(0xFFC6C6C6),
                     fit: BoxFit.contain,
                   ),
@@ -97,8 +100,8 @@ class DashBoardScreen extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
                     color: controller.selectedIndex.value == index
-                        ? Color(0xFF7F3DFF)
-                        : Color(0xFFA49F9F),
+                        ? const Color(0xFF7F3DFF)
+                        : const Color(0xFFA49F9F),
                   ),
                 ),
               ),
@@ -113,13 +116,13 @@ class DashBoardScreen extends StatelessWidget {
       child: SizedBox(
         height: size.height / 14,
         child: SpeedDial(
-          backgroundColor: Color(0xFF7F3DFF),
+          backgroundColor: const Color(0xFF7F3DFF),
           icon: Icons.add,
           activeIcon: Icons.close,
           iconTheme: const IconThemeData(
               color: ColorManager.lightBackground, size: 35),
           overlayColor: ColorManager.lightBackground,
-          overlayOpacity: 0.0,
+          overlayOpacity: 0.3,
           spaceBetweenChildren: 5,
           children: [
             SpeedDialChild(
@@ -127,25 +130,25 @@ class DashBoardScreen extends StatelessWidget {
               child: Container(
                 width: 56,
                 height: 56,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
+                padding: const EdgeInsets.all(8),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(55)),
                 child: Image.asset(
                   'assets/icons/expense.png',
                   fit: BoxFit.contain,
                   color: Colors.white,
                 ),
               ),
-              onTap: () => print('Send Clicked'),
+              onTap: () =>
+                  Get.to(() => const CommonTransactionScreen(type: 'Expense')),
             ),
             SpeedDialChild(
-              backgroundColor: Color(0xFF0077FF),
+              backgroundColor: const Color(0xFF0077FF),
               child: Container(
                 width: 56,
                 height: 56,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(
@@ -153,15 +156,15 @@ class DashBoardScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              onTap: () => Get.to(()=>TransferScreen()),
+              onTap: () => Get.to(() => const TransferScreen()),
             ),
             SpeedDialChild(
               backgroundColor: Colors.green,
               child: Container(
                 width: 56,
                 height: 56,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(
@@ -169,7 +172,8 @@ class DashBoardScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              onTap: () => print('Receive Clicked'),
+              onTap: () =>
+                  Get.to(() => const CommonTransactionScreen(type: 'Income')),
             ),
           ],
         ),

@@ -63,7 +63,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   GestureDetector(
                     onTap: () {
                       showMenu(
-                        shadowColor: Color(0xffcac0dd),
+                        shadowColor: const Color(0xffcac0dd),
                         context: context,
                         color: Colors.white,
                         position: RelativeRect.fromLTRB(size.width / 22,
@@ -73,7 +73,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             value: freq,
                             child: Text(
                               freq,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
                             onTap: () {
                               setState(() {
@@ -377,7 +377,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   StatefulBuilder buildBottomSheetFilter(Size size) {
     return StatefulBuilder(builder: (context, setModalState) {
       return Container(
-        height:selectedTransactionType=='Transfer'? size.height / 1.8: size.height / 1.5,
+        height: selectedTransactionType == 'Transfer'
+            ? size.height / 1.8
+            : size.height / 1.5,
         width: size.width,
         padding: EdgeInsets.symmetric(horizontal: size.width / 22),
         decoration: const BoxDecoration(
@@ -446,12 +448,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       border: Border.all(
                           width: 1,
                           color: selectedTransactionType == type[index]
-                              ? Color(0xffEEE5FF)
-                              : Color(0xffcac0dd)),
+                              ? const Color(0xffEEE5FF)
+                              : const Color(0xffcac0dd)),
                       borderRadius: BorderRadius.circular(20),
                       color: selectedTransactionType == type[index]
-                          ? Color(0xffEEE5FF)
-                          : Color(0xFFFFFFFF)
+                          ? const Color(0xffEEE5FF)
+                          : const Color(0xFFFFFFFF)
                       //  color: Color(0xFFA5BBB3)
                       ),
                   child: Text(
@@ -459,8 +461,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: selectedTransactionType == type[index]
-                            ? Color(0xffa986ed)
-                            : Color(0xff1b1919)),
+                            ? const Color(0xffa986ed)
+                            : const Color(0xff1b1919)),
                   ),
                 ),
               );
@@ -489,19 +491,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       border: Border.all(
                           width: 1,
                           color: sortBy == type[index]
-                              ? Color(0xffEEE5FF)
-                              : Color(0xffcac0dd)),
+                              ? const Color(0xffEEE5FF)
+                              : const Color(0xffcac0dd)),
                       borderRadius: BorderRadius.circular(20),
                       color: sortBy == type[index]
-                          ? Color(0xffEEE5FF)
-                          : Color(0xFFFFFFFF)),
+                          ? const Color(0xffEEE5FF)
+                          : const Color(0xFFFFFFFF)),
                   child: Text(
                     type[index],
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: sortBy == type[index]
-                            ? Color(0xffa986ed)
-                            : Color(0xff1b1919)),
+                            ? const Color(0xffa986ed)
+                            : const Color(0xff1b1919)),
                   ),
                 ),
               );
@@ -515,14 +517,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Choose Category',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   GestureDetector(
                     onTap: () {
                       showMenu(
-                        shadowColor: Color(0xffcac0dd),
+                        shadowColor: const Color(0xffcac0dd),
                         context: context,
                         color: Colors.white,
                         position: RelativeRect.fromLTRB(
@@ -538,7 +540,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   child: Text(
                                     category,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w600),
+                                        const TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                   onTap: () {
                                     setModalState(() {
@@ -553,7 +555,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   child: Text(
                                     category,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w600),
+                                        const TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                   onTap: () {
                                     setModalState(() {
@@ -564,7 +566,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               }).toList(),
                       );
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Text(
                           'Selected',
@@ -589,7 +591,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 colorButton: const Color(0xff7F3DFF),
                 colorText: ColorManager.lightBackground,
                 onTap: () {
-                  transactionController.fetchFilterTransaction(selectedCategory??'', selectedTransactionType, sortBy);
+                  transactionController.fetchFilterTransaction(
+                      selectedCategory ?? '', selectedTransactionType, sortBy);
                   Get.back();
                 }),
             SizedBox(height: size.height / 35),
@@ -602,8 +605,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   String getTransactionHeader(DateTime date) {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
-    DateTime yesterday = today.subtract(Duration(days: 1));
-    DateTime weekAgo = today.subtract(Duration(days: 7));
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+    DateTime weekAgo = today.subtract(const Duration(days: 7));
 
     if (date.year == now.year &&
         date.month == now.month &&

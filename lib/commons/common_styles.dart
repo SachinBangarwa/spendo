@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spendo/theme/color_manager.dart';
 
 class CommonStyles {
   static InputDecoration inputDecoration(

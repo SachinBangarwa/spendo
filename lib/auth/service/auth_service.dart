@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   static final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
-  static Future saveUserData(User user, String authMethod,{String userName='' }) async {
+  static Future saveUserData(User user, String authMethod,
+      {String userName = ''}) async {
     await fireStore.collection('users').doc(user.uid).set({
       'userId': user.uid,
       'email': user.email ?? '',
-      'name': user.displayName ??userName,
+      'name': user.displayName ?? userName,
       "phone": user.phoneNumber ?? '',
       "authMethod": authMethod,
       "createdAt": FieldValue.serverTimestamp()

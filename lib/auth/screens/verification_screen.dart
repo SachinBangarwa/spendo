@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-
-import '../../widgets/common_appBar _widget.dart';
+import '../../widgets/common_app_bar _widget.dart';
 
 class VerificationScreen extends StatelessWidget {
   const VerificationScreen({super.key});
@@ -39,7 +38,7 @@ class VerificationScreen extends StatelessWidget {
             SizedBox(height: size.height / 40),
             OTPInputFields(size: size),
             SizedBox(height: size.height / 40),
-            Text(
+            const Text(
               '04:59',
               style: TextStyle(
                 color: Colors.orange,
@@ -70,7 +69,7 @@ class VerificationScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: size.height / 40),
-            Text(
+            const Text(
               'I didn’t receive the code? Send again',
               style: TextStyle(
                 fontSize: 16,
@@ -97,7 +96,7 @@ class VerificationScreen extends StatelessWidget {
 class OTPInputFields extends StatefulWidget {
   final Size size;
 
-  const OTPInputFields({required this.size});
+  const OTPInputFields({super.key, required this.size});
 
   @override
   _OTPInputFieldsState createState() => _OTPInputFieldsState();

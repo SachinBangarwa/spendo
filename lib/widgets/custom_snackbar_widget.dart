@@ -5,7 +5,7 @@ void showCustomSnackBar(String title, String message, {bool isSuccess = true}) {
   Get.snackbar(
     title,
     message,
-    snackPosition: SnackPosition.BOTTOM,
+    snackPosition: SnackPosition.TOP,
     backgroundColor: isSuccess ? Colors.green : Colors.black,
     colorText: Colors.white,
     borderRadius: 20,

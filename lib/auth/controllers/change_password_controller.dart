@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
 
 class ChangePasswordController extends GetxController {
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> changePassword(String currentPassword, String newPassword) async {
+  Future<void> changePassword(String currentPassword,
+      String newPassword) async {
     if (user != null) {
       try {
         AuthCredential authCredential = EmailAuthProvider.credential(
@@ -18,7 +18,8 @@ class ChangePasswordController extends GetxController {
 
         await user!.updatePassword(newPassword);
 
-        showCustomSnackBar('Success', 'Password changed successfully!', isSuccess: true);
+        showCustomSnackBar(
+            'Success', 'Password changed successfully!', isSuccess: true);
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
@@ -37,7 +38,8 @@ class ChangePasswordController extends GetxController {
 
         showCustomSnackBar('Error', errorMessage, isSuccess: false);
       } catch (e) {
-        showCustomSnackBar('Error', 'An unexpected error occurred: $e', isSuccess: false);
+        showCustomSnackBar(
+            'Error', 'An unexpected error occurred: $e', isSuccess: false);
       }
     }
   }

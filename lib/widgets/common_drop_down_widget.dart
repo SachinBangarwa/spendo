@@ -33,7 +33,7 @@ class CommonDropdown extends StatelessWidget {
           value: null,
           child: Text(
             hintText,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
           ),
         ),
         ...items.map((type) => DropdownMenuItem(value: type, child: Text(type))),

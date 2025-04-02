@@ -15,9 +15,7 @@ class CustomTransactionSection extends StatelessWidget {
       itemCount: 10,
       itemBuilder: (context, index) {
         return Container(
-
-          margin: EdgeInsets.symmetric(
-              vertical: size.height / 150),
+          margin: EdgeInsets.symmetric(vertical: size.height / 150),
           padding: EdgeInsets.symmetric(
               horizontal: size.width / 34, vertical: size.height / 50),
           decoration: BoxDecoration(
@@ -44,7 +42,7 @@ class CustomTransactionSection extends StatelessWidget {
                 ),
               ),
               SizedBox(width: size.width / 30),
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -66,7 +64,7 @@ class CustomTransactionSection extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

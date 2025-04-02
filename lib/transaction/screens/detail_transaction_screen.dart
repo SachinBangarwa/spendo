@@ -6,8 +6,9 @@ import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/edite_transaction_screen.dart';
 import 'package:spendo/transaction/screens/edite_transfer_transaction_screen.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
+
+import '../../widgets/common_app_bar _widget.dart';
 
 class DetailTransactionScreen extends StatefulWidget {
   const DetailTransactionScreen({super.key, required this.data});
@@ -81,7 +82,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                     ),
                     Text(
                       "₹${widget.data['amount'].toString()}",
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 48,
@@ -103,7 +104,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                           ? DateFormat("yyyy-MM-dd HH:mm:ss").format(
                               DateTime.parse(widget.data['date']).toLocal())
                           : "No Date Available",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -178,7 +179,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                     ),
                     Text(
                       widget.data['description'] ?? 'No description added',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -300,19 +301,19 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                       borderRadius: BorderRadius.circular(8)),
                 ),
                 SizedBox(height: size.height / 55),
-                Text(
+                const Text(
                   'Remove this budget?',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: size.height / 55),
-                Text(
+                const Text(
                   'Are you sure do you wanna remove this\n                           budget?',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.grey),
                 ),
-                Spacer(),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -326,8 +327,8 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                           height: size.height / 16,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Color(0xFFEFEDED)),
-                          child: Text(
+                              color: const Color(0xFFEFEDED)),
+                          child: const Text(
                             'No',
                             style: TextStyle(
                                 color: Color(0xFF7F3DFF),
@@ -354,7 +355,8 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                                 );
                               },
                             );
-                          await  Future.delayed(const Duration(seconds: 3), () {
+                            await Future.delayed(const Duration(seconds: 3),
+                                () {
                               Navigator.pop(context);
                               Get.back();
                             });
@@ -366,8 +368,8 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                           height: size.height / 16,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Color(0xFFEFEDED)),
-                          child: Text(
+                              color: const Color(0xFFEFEDED)),
+                          child: const Text(
                             'Yes',
                             style: TextStyle(
                                 color: Color(0xFF7F3DFF),
@@ -401,7 +403,6 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
             height: size.height / 6,
             width: size.height / 6,
             fit: BoxFit.cover,
-
           ),
           const Text(
             "Transaction has been successfully Remove",

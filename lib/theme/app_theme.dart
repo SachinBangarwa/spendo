@@ -7,10 +7,11 @@ class AppTheme {
     primaryColor: ColorManager.primary,
     scaffoldBackgroundColor: ColorManager.primary,
     cardColor: ColorManager.lightCard,
-
-    appBarTheme: AppBarTheme(iconTheme: IconThemeData(size: 32),
+    appBarTheme: const AppBarTheme(
+      iconTheme: IconThemeData(size: 32),
       titleTextStyle: TextStyle(
-          fontSize: 18,letterSpacing: 0,
+          fontSize: 18,
+          letterSpacing: 0,
           fontWeight: FontWeight.w600,
           color: ColorManager.lightText),
       backgroundColor: ColorManager.lightBackground,

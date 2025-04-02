@@ -8,7 +8,7 @@ import 'package:spendo/home/controllers/attachment_controller.dart';
 import 'package:spendo/home/controllers/add_transaction_controller.dart';
 import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
 import '../../commons/common_styles.dart';
@@ -22,27 +22,36 @@ class EditeTransferTransactionScreen extends StatefulWidget {
   });
 
   @override
-  State<EditeTransferTransactionScreen> createState() => _EditeTransferTransactionScreen();
+  State<EditeTransferTransactionScreen> createState() =>
+      _EditeTransferTransactionScreen();
 }
 
-class _EditeTransferTransactionScreen extends State<EditeTransferTransactionScreen> {
+class _EditeTransferTransactionScreen
+    extends State<EditeTransferTransactionScreen> {
   late TextEditingController descController;
   late TextEditingController amountController;
   late TextEditingController fromController;
   late TextEditingController toController;
 
-  final AttachmentController attachmentController = Get.put(AttachmentController());
-  final AddTransactionController addTransactionController = Get.put(AddTransactionController());
-  final TransactionController transactionController = Get.put(TransactionController());
+  final AttachmentController attachmentController =
+      Get.put(AttachmentController());
+  final AddTransactionController addTransactionController =
+      Get.put(AddTransactionController());
+  final TransactionController transactionController =
+      Get.put(TransactionController());
 
   @override
   void initState() {
     super.initState();
 
-    descController = TextEditingController(text: widget.data['description'] ?? '');
-    amountController = TextEditingController(text: widget.data['amount']?.toString() ?? '0.0');
-    fromController = TextEditingController(text: widget.data['fromAccountType'] ?? '');
-    toController = TextEditingController(text: widget.data['toAccountType'] ?? '');
+    descController =
+        TextEditingController(text: widget.data['description'] ?? '');
+    amountController =
+        TextEditingController(text: widget.data['amount']?.toString() ?? '0.0');
+    fromController =
+        TextEditingController(text: widget.data['fromAccountType'] ?? '');
+    toController =
+        TextEditingController(text: widget.data['toAccountType'] ?? '');
   }
 
   @override
@@ -145,188 +154,188 @@ class _EditeTransferTransactionScreen extends State<EditeTransferTransactionScre
                     Obx(() {
                       return attachmentController.path.value != ''
                           ? Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Container(
-                            width: size.width / 3.5,
-                            height: size.height / 7.9,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                  color: Colors.grey, width: 1),
-                              color: Colors.grey[200],
-                            ),
-                            child: attachmentController.isImage()
-                                ? Image.file(
-                                File(attachmentController.path.value),
-                                fit: BoxFit.cover)
-                                : Center(
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                      Icons.insert_drive_file,
-                                      size: 40,
-                                      color: Colors.black54),
-                                  const SizedBox(height: 4),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      attachmentController
-                                          .getFileName(),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black54),
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  width: size.width / 3.5,
+                                  height: size.height / 7.9,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                        color: Colors.grey, width: 1),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: attachmentController.isImage()
+                                      ? Image.file(
+                                          File(attachmentController.path.value),
+                                          fit: BoxFit.cover)
+                                      : Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Icon(
+                                                  Icons.insert_drive_file,
+                                                  size: 40,
+                                                  color: Colors.black54),
+                                              const SizedBox(height: 4),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: Text(
+                                                  attachmentController
+                                                      .getFileName(),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black54),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                ),
+                                Positioned(
+                                  top: -8,
+                                  right: -8,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      attachmentController.path.value = '';
+                                    },
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                      ),
+                                      child: const Icon(Icons.cancel,
+                                          color: Colors.black, size: 28),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: -8,
-                            right: -8,
-                            child: GestureDetector(
-                              onTap: () {
-                                attachmentController.path.value = '';
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
                                 ),
-                                child: const Icon(Icons.cancel,
-                                    color: Colors.black, size: 28),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
+                              ],
+                            )
                           : Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size.width / 100),
-                        child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (index) {
-                                  return Container(
-                                    height: size.height / 5,
-                                    width: size.width,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width / 100),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (index) {
+                                        return Container(
+                                          height: size.height / 5,
+                                          width: size.width,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: size.width / 22),
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(30),
+                                                  topLeft:
+                                                      Radius.circular(30))),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.all(6),
+                                                width: size.width / 8,
+                                                height: 5,
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFA5BBB3),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                              ),
+                                              SizedBox(
+                                                  height: size.height / 25),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  _buildAttachment(
+                                                    size,
+                                                    const Icon(
+                                                        Icons
+                                                            .camera_alt_outlined,
+                                                        color: Colors.white,
+                                                        size: 30),
+                                                    'Camera',
+                                                    () async {
+                                                      await attachmentController
+                                                          .getCamera();
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                  _buildAttachment(
+                                                    size,
+                                                    const Icon(
+                                                        Icons.image_outlined,
+                                                        color: Colors.white,
+                                                        size: 30),
+                                                    'Image',
+                                                    () async {
+                                                      await attachmentController
+                                                          .getImage();
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                  _buildAttachment(
+                                                    size,
+                                                    const Icon(
+                                                        Icons
+                                                            .insert_drive_file_outlined,
+                                                        color: Colors.white,
+                                                        size: 30),
+                                                    'Document',
+                                                    () async {
+                                                      await attachmentController
+                                                          .getDocument();
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
+                                child: DottedBorder(
+                                  color:
+                                      const Color(0xFF0077FF).withOpacity(0.3),
+                                  strokeWidth: 1.5,
+                                  dashPattern: const [8, 4],
+                                  borderType: BorderType.RRect,
+                                  radius: const Radius.circular(12),
+                                  child: Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: size.width / 22),
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(30),
-                                            topLeft:
-                                            Radius.circular(30))),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                        horizontal: size.width / 20,
+                                        vertical: size.height / 65),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          margin: const EdgeInsets.all(6),
-                                          width: size.width / 8,
-                                          height: 5,
-                                          decoration: BoxDecoration(
-                                              color:
-                                              const Color(0xFFA5BBB3),
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  8)),
+                                        Transform.rotate(
+                                          angle: 0.4,
+                                          child: const Icon(Icons.attach_file,
+                                              color: Colors.black87),
                                         ),
-                                        SizedBox(
-                                            height: size.height / 25),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceBetween,
-                                          children: [
-                                            _buildAttachment(
-                                              size,
-                                              const Icon(
-                                                  Icons
-                                                      .camera_alt_outlined,
-                                                  color: Colors.white,
-                                                  size: 30),
-                                              'Camera',
-                                                  () async {
-                                                await attachmentController
-                                                    .getCamera();
-                                                Get.back();
-                                              },
-                                            ),
-                                            _buildAttachment(
-                                              size,
-                                              const Icon(
-                                                  Icons.image_outlined,
-                                                  color: Colors.white,
-                                                  size: 30),
-                                              'Image',
-                                                  () async {
-                                                await attachmentController
-                                                    .getImage();
-                                                Get.back();
-                                              },
-                                            ),
-                                            _buildAttachment(
-                                              size,
-                                              const Icon(
-                                                  Icons
-                                                      .insert_drive_file_outlined,
-                                                  color: Colors.white,
-                                                  size: 30),
-                                              'Document',
-                                                  () async {
-                                                await attachmentController
-                                                    .getDocument();
-                                                Get.back();
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                                        const SizedBox(width: 8),
+                                        const Text('Add attachment',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16)),
                                       ],
                                     ),
-                                  );
-                                });
-                          },
-                          child: DottedBorder(
-                            color:
-                            const Color(0xFF0077FF).withOpacity(0.3),
-                            strokeWidth: 1.5,
-                            dashPattern: const [8, 4],
-                            borderType: BorderType.RRect,
-                            radius: const Radius.circular(12),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width / 20,
-                                  vertical: size.height / 65),
-                              alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Transform.rotate(
-                                    angle: 0.4,
-                                    child: const Icon(Icons.attach_file,
-                                        color: Colors.black87),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text('Add attachment',
-                                      style: TextStyle(
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16)),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
+                            );
                     }),
                     const Spacer(),
                     CustomButton(
@@ -335,32 +344,31 @@ class _EditeTransferTransactionScreen extends State<EditeTransferTransactionScre
                         colorText: ColorManager.lightBackground,
                         onTap: () async {
                           double? amount =
-                          double.tryParse(amountController.text);
-                          if (amount == null || amount<=0.0 ) {
+                              double.tryParse(amountController.text);
+                          if (amount == null || amount <= 0.0) {
                             showCustomSnackBar(
                                 'Error', 'Please enter a valid amount',
                                 isSuccess: false);
-                          }else if(
-                          descController.text.isEmpty
-                          ){
+                          } else if (descController.text.isEmpty) {
                             showCustomSnackBar(
                                 'Error', 'Please enter a description',
                                 isSuccess: false);
-                          }
-                          else {
-                            String? fromId=   await  addTransactionController.getAccountIdByName(fromController.text.trim());
-                            String? toId=   await  addTransactionController.getAccountIdByName(toController.text.trim());
+                          } else {
+                            String? fromId = await addTransactionController
+                                .getAccountIdByName(fromController.text.trim());
+                            String? toId = await addTransactionController
+                                .getAccountIdByName(toController.text.trim());
                             await transactionController
                                 .upDateTransaction(
                               transactionId: widget.data['transactionId'],
                               amount: amount,
                               category: '',
                               description: descController.text,
-                              fromAccountId:fromId??'',
+                              fromAccountId: fromId ?? '',
                               fromAccountType: fromController.text,
                               type: 'Transfer',
-                              imageUrl: attachmentController.path.value ?? '',
-                              toAccountId: toId??'',
+                              imageUrl: attachmentController.path.value,
+                              toAccountId: toId ?? '',
                               toAccountType: toController.text,
                             )
                                 .then((onValue) {
@@ -455,15 +463,15 @@ class _EditeTransferTransactionScreen extends State<EditeTransferTransactionScre
       style: const TextStyle(
           fontWeight: FontWeight.w600, color: Colors.black87, fontSize: 16),
       decoration:
-      CommonStyles.inputDecoration(hintText, size, borderColor: themColor),
+          CommonStyles.inputDecoration(hintText, size, borderColor: themColor),
       cursorColor: ColorManager.primary,
     );
   }
 
   Widget buildBalanceTextField(
-      Size size,
-      TextEditingController controller,
-      ) {
+    Size size,
+    TextEditingController controller,
+  ) {
     return Expanded(
       child: TextFormField(
         controller: controller,

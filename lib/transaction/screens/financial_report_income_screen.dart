@@ -2,31 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spendo/home/controllers/transaction_controller.dart';
 
-
 class FinancialReportIncomeScreen extends StatelessWidget {
   const FinancialReportIncomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final TransactionController transactionController = Get.put(TransactionController());
+    final TransactionController transactionController =
+        Get.put(TransactionController());
 
     return Scaffold(
-      backgroundColor: Color(0xFF00A86B),
+      backgroundColor: const Color(0xFF00A86B),
       body: Column(
         children: [
           SizedBox(height: size.height / 6),
-          Center(
+          const Center(
               child: Text(
-                "This Month",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.w600,
-                ),
-              )),
+            "This Month",
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              fontWeight: FontWeight.w600,
+            ),
+          )),
           SizedBox(height: size.height / 8),
-          Text(
+          const Text(
             'You Earned💰',
             style: TextStyle(
               fontSize: 36,
@@ -53,10 +53,13 @@ class FinancialReportIncomeScreen extends StatelessWidget {
             );
           }),
 
-          Spacer(),
+          const Spacer(),
 
           Container(
-            margin: EdgeInsets.only(left: size.width / 22, right: size.width / 22, bottom: size.height / 22),
+            margin: EdgeInsets.only(
+                left: size.width / 22,
+                right: size.width / 22,
+                bottom: size.height / 22),
             padding: EdgeInsets.all(size.height / 45),
             width: double.infinity,
             decoration: BoxDecoration(
@@ -67,38 +70,45 @@ class FinancialReportIncomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Your biggest\n Income is from',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.2),
+                  style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w700, height: 1.2),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: size.height / 66),
-
                 Obx(() {
-                  double biggestIncome = transactionController.biggestIncomeAmount.value;
-                  String category = transactionController.biggestIncomeCategory.value;
+                  double biggestIncome =
+                      transactionController.biggestIncomeAmount.value;
+                  String category =
+                      transactionController.biggestIncomeCategory.value;
 
                   return Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: size.height / 77),
-                        margin: EdgeInsets.symmetric(horizontal: size.width / 8),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10, vertical: size.height / 77),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: size.width / 8),
                         decoration: BoxDecoration(
-                          color: Color(0xFFE3E5E5),
-                          border: Border.all(color: Color(0xffcac0dd), width: 1),
+                          color: const Color(0xFFE3E5E5),
+                          border: Border.all(
+                              color: const Color(0xffcac0dd), width: 1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.monetization_on, color: Colors.black),
+                            const Icon(Icons.monetization_on,
+                                color: Colors.black),
                             SizedBox(width: size.width / 77),
                             Flexible(
                               child: Text(
                                 category.isNotEmpty ? category : "N/A",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 18),
                               ),
                             ),
                           ],
@@ -115,7 +125,6 @@ class FinancialReportIncomeScreen extends StatelessWidget {
                     ],
                   );
                 })
-
               ],
             ),
           ),
@@ -123,6 +132,7 @@ class FinancialReportIncomeScreen extends StatelessWidget {
       ),
     );
   }
+
   double getDynamicFontSize(double amount) {
     if (amount > 999999) {
       return 32;
@@ -132,5 +142,4 @@ class FinancialReportIncomeScreen extends StatelessWidget {
       return 60;
     }
   }
-
 }

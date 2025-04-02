@@ -16,29 +16,29 @@ class TotalBalanceController extends GetxController {
   }
 
   void totalBalanceCloud() {
-  try{
-    if (user == null) return;
+    try {
+      if (user == null) return;
 
-    fireStore
-        .collection('users')
-        .doc(user!.uid)
-        .collection('accounts')
-        .snapshots()
-        .listen((snapshot) {
-      double total = 0.0;
-      List<Map<String, dynamic>> tempList = [];
+      fireStore
+          .collection('users')
+          .doc(user!.uid)
+          .collection('accounts')
+          .snapshots()
+          .listen((snapshot) {
+        double total = 0.0;
+        List<Map<String, dynamic>> tempList = [];
 
-      for (var doc in snapshot.docs) {
-        Map<String, dynamic> data = doc.data();
-        total += (data['balance'] ?? 0).toDouble();
-        tempList.add(data);
-      }
+        for (var doc in snapshot.docs) {
+          Map<String, dynamic> data = doc.data();
+          total += (data['balance'] ?? 0).toDouble();
+          tempList.add(data);
+        }
 
-      totalBalance.value = total;
-      accountsList.value = tempList;
-    });
-  }catch(e){
-    print('object=>$e');
-  }
+        totalBalance.value = total;
+        accountsList.value = tempList;
+      });
+    } catch (e) {
+      print('object=>$e');
+    }
   }
 }

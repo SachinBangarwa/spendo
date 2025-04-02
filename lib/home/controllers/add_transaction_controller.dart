@@ -83,7 +83,6 @@ class AddTransactionController extends GetxController {
               }
           });
 
-          print(" New transaction added successfully!");
         }
       }
     } catch (e) {

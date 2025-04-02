@@ -5,7 +5,7 @@ import 'package:spendo/profile/controllers/add_bank_controller.dart';
 import 'package:spendo/profile/screens/account/add_account_success_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-import '../../../widgets/common_appBar _widget.dart';
+import '../../../widgets/common_app_bar _widget.dart';
 
 class EditBankScreen extends StatefulWidget {
   const EditBankScreen({
@@ -26,8 +26,8 @@ class _EditBankScreenState extends State<EditBankScreen> {
   @override
   void initState() {
     super.initState();
-    _balanceController = TextEditingController(
-        text: widget.account['balance'].toString() ?? '0.0');
+    _balanceController =
+        TextEditingController(text: widget.account['balance'].toString());
 
     _bankController.selectedAccountName.value = widget.account['name'] ?? '';
   }

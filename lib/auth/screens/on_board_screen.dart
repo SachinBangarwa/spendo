@@ -20,7 +20,7 @@ class OnBoardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorManager.lightBackground,
       body: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: size.width / 22),
+        padding: EdgeInsets.symmetric(horizontal: size.width / 22),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -74,15 +74,15 @@ class OnBoardScreen extends StatelessWidget {
                     padding: EdgeInsets.all(size.width / 40),
                     child: CircleAvatar(
                       radius: isBool ? size.height / 120 : size.height / 200,
-                      backgroundColor:
-                      isBool ? ColorManager.primary : const Color(0xFFEEE5FF),
+                      backgroundColor: isBool
+                          ? ColorManager.primary
+                          : const Color(0xFFEEE5FF),
                     ),
                   );
                 });
               }),
             ),
             SizedBox(height: size.height / 30),
-
             CustomButton(
               text: "Sign Up",
               colorButton: ColorManager.primary,
@@ -91,18 +91,15 @@ class OnBoardScreen extends StatelessWidget {
                 Get.to(() => SignUpScreen());
               },
             ),
-
             SizedBox(height: size.height / 50),
-
             CustomButton(
               text: "Login",
               colorButton: const Color(0xFFEEE5FF),
               colorText: ColorManager.primary,
               onTap: () {
-        Get.to(()=>LoginScreen());
+                Get.to(() => LoginScreen());
               },
             ),
-
             SizedBox(height: size.height / 50),
           ],
         ),

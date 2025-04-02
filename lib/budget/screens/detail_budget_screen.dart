@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:spendo/budget/screens/create_budget_screen.dart';
+import 'package:spendo/budget/controllers/budget_controller.dart';
+import 'package:spendo/budget/screens/edit_budget_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
 class DetailBudgetScreen extends StatelessWidget {
-  const DetailBudgetScreen({super.key});
+  final String category;
+  final String budgetId;
+  final double amount;
+  final double spent;
+  final Color categoryColor;
+
+  DetailBudgetScreen({
+    super.key,
+    required this.category,
+    required this.budgetId,
+    required this.amount,
+    required this.spent,
+    required this.categoryColor,
+  });
+
+  final BudgetController budgetController = Get.put(BudgetController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +37,7 @@ class DetailBudgetScreen extends StatelessWidget {
         backGroundCol: ColorManager.lightBackground,
         trailing: Padding(
           padding: EdgeInsets.only(right: size.width / 22),
-          child: Icon(
+          child: const Icon(
             Icons.restore_from_trash,
             size: 28,
             color: ColorManager.lightText,
@@ -44,26 +60,28 @@ class DetailBudgetScreen extends StatelessWidget {
                     horizontal: size.width / 22, vertical: size.height / 55),
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(width: 2, color: Colors.black12),
-                    borderRadius: BorderRadius.circular(20)),
+                    border:
+                        Border.all(width: 2, color: const Color(0xFFF1F1FA)),
+                    borderRadius: BorderRadius.circular(25)),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      width: size.width / 25,
+                      height: size.height / 25,
                       decoration: BoxDecoration(
-                          color: Color(0xFFFCAC12),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Icon(Icons.person),
+                        color: categoryColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                     SizedBox(
                       width: size.width / 55,
                     ),
                     Text(
-                      'Category',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                      category,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 16),
                     )
                   ],
                 ),
@@ -72,61 +90,66 @@ class DetailBudgetScreen extends StatelessWidget {
             SizedBox(
               height: size.height / 30,
             ),
-            Text(
+            const Text(
               'Reamaing',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             Text(
-              '\$0',
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
+              '₹${amount - spent}',
+              style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
             ),
             SizedBox(
               height: size.height / 55,
             ),
             LinearProgressIndicator(
-              value: 100 / 100,
+              value: (spent / amount).clamp(0.0, 1.0),
               minHeight: size.height / 66,
               borderRadius: BorderRadius.circular(20),
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation(Color(0xFFFCAC12)),
+              valueColor: AlwaysStoppedAnimation(categoryColor),
             ),
             SizedBox(
               height: size.height / 30,
             ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.width / 25, vertical: size.height / 99),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xFFFD3C4A)),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.error,
-                    color: ColorManager.lightBackground,
-                    size: 30,
-                  ),
-                  SizedBox(
-                    width: size.width / 55,
-                  ),
-                  Text(
-                    'You’ve exceed the limit!',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: ColorManager.lightBackground,
-                        fontWeight: FontWeight.w700),
-                  ),
-                ],
+            if (spent > amount)
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width / 25, vertical: size.height / 99),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFFD3C4A)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      color: ColorManager.lightBackground,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: size.width / 55,
+                    ),
+                    const Text(
+                      'You’ve exceed the limit!',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: ColorManager.lightBackground,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Spacer(),
+            const Spacer(),
             CustomButton(
               text: 'Edit',
               onTap: () {
-                Get.to(()=>CreateBudgetScreen(title: 'Edit Budget',));
+                Get.to(() => EditBudgetScreen(
+                      category: category,
+                      amount: amount,
+                      budgetId: budgetId,
+                    ));
               },
-              colorButton: Color(0xFF7F3DFF),
+              colorButton: const Color(0xFF7F3DFF),
               colorText: ColorManager.lightBackground,
             ),
           ],
@@ -136,7 +159,7 @@ class DetailBudgetScreen extends StatelessWidget {
   }
 
   void _removeBudgetButton(BuildContext context, Size size) {
-      showModalBottomSheet(
+    showModalBottomSheet(
         context: context,
         builder: (index) {
           return Container(
@@ -160,36 +183,40 @@ class DetailBudgetScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8)),
                 ),
                 SizedBox(height: size.height / 55),
-                Text(
+                const Text(
                   'Remove this budget?',
-                  style: TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: size.height / 55),
-                Text(
+                const Text(
                   'Are you sure do you wanna remove this\n                           budget?',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.grey),
                 ),
-                Spacer(),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: size.height / 16,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color(0xFFEFEDED)),
-                        child: Text(
-                          'No',
-                          style: TextStyle(
-                              color: Color(0xFF7F3DFF),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: size.height / 16,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color(0xFFEFEDED)),
+                          child: const Text(
+                            'No',
+                            style: TextStyle(
+                                color: Color(0xFF7F3DFF),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
                       ),
                     ),
@@ -197,18 +224,25 @@ class DetailBudgetScreen extends StatelessWidget {
                       width: size.width / 25,
                     ),
                     Flexible(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: size.height / 16,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color(0xFFEFEDED)),
-                        child: Text(
-                          'Yes',
-                          style: TextStyle(
-                              color: Color(0xFF7F3DFF),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                      child: GestureDetector(
+                        onTap: () {
+                          budgetController.deleteBudget(budgetId);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: size.height / 16,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color(0xFFEFEDED)),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(
+                                color: Color(0xFF7F3DFF),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
                       ),
                     ),

@@ -11,37 +11,32 @@ class ColorManager {
   static const Color darkCard = Color(0xFFE65100);
   static const Color darkText = Colors.white;
 
-
-static  Color getCategoryColor(String category) {
+  static Color getCategoryColor(String category) {
     switch (category) {
-    // Income Categories
       case "Salary":
-        return Color(0xFF00A86B); // Deep Green
+        return const Color(0xFF00A86B);
       case "Freelance":
-        return Color(0xFF087E8B); // Teal Blue
+        return const Color(0xFF087E8B);
       case "Investments":
-        return Color(0xFF004AAD); // Royal Blue
+        return const Color(0xFF004AAD);
       case "Gifts":
-        return Color(0xFFA12A5E); // Deep Pinkish Purple
+        return const Color(0xFFA12A5E);
       case "Business":
-        return Color(0xFF0D0E0F); // Dark Grey/Black
+        return const Color(0xFF0D0E0F);
 
-    // Expense Categories
       case "Food & Drinks":
-        return Color(0xFFFD3C4A); // Bright Red
+        return const Color(0xFFFD3C4A);
       case "Shopping":
-        return Color(0xFFFCAC12); // Deep Orange-Yellow
+        return const Color(0xFFFCAC12);
       case "Transport":
-        return Color(0xFF7F3DFF); // Rich Purple
+        return const Color(0xFF7F3DFF);
       case "Entertainment":
-        return Color(0xFF5727A3); // Deep Violet
+        return const Color(0xFF5727A3);
       case "Health & Fitness":
-        return Color(0xFF1FAA59); // Bright Green
+        return const Color(0xFF1FAA59);
 
-    // Default (Other Expenses)
       default:
-        return Color(0xFF5A5A5A); // Dark Grey
+        return const Color(0xFF5A5A5A);
     }
   }
-
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +6,7 @@ import 'package:spendo/profile/screens/account/edit_bank_screen.dart';
 import 'package:spendo/profile/screens/account/edit_wallet_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/detail_transaction_screen.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 
 class DetailAccountScreen extends StatefulWidget {
   const DetailAccountScreen({super.key, required this.account});
@@ -20,7 +19,7 @@ class DetailAccountScreen extends StatefulWidget {
 
 class _DetailAccountScreenState extends State<DetailAccountScreen> {
   final GetAccountTransactionController _controller =
-  Get.put(GetAccountTransactionController());
+      Get.put(GetAccountTransactionController());
 
   @override
   void initState() {
@@ -47,12 +46,15 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
         onBack: () {
           Get.back();
         },
-        onTrailingTap: (){
-          if(widget.account['type']=="Wallet"){
-            Get.to(()=>EditWalletScreen(account: widget.account,));
-          }else{
-            Get.to(()=>EditBankScreen(account: widget.account,));
-
+        onTrailingTap: () {
+          if (widget.account['type'] == "Wallet") {
+            Get.to(() => EditWalletScreen(
+                  account: widget.account,
+                ));
+          } else {
+            Get.to(() => EditBankScreen(
+                  account: widget.account,
+                ));
           }
         },
       ),
@@ -74,7 +76,6 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
               color: Colors.black12.withOpacity(0.1),
             ),
             SizedBox(height: size.height / 40),
-
             Expanded(
               child: Obx(() {
                 if (_controller.transactionsList.isEmpty) {
@@ -90,9 +91,11 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
                   );
                 }
 
-                Map<String, List<Map<String, dynamic>>> categorizedTransactions =
-                categorizeTransactions(
-                    _controller.transactionsList.toList().cast<Map<String, dynamic>>());
+                Map<String, List<Map<String, dynamic>>>
+                    categorizedTransactions = categorizeTransactions(_controller
+                        .transactionsList
+                        .toList()
+                        .cast<Map<String, dynamic>>());
 
                 return ListView(
                   padding: EdgeInsets.only(bottom: size.height / 20),
@@ -102,7 +105,8 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: size.height / 60, horizontal: size.width / 30),
+                              vertical: size.height / 60,
+                              horizontal: size.width / 30),
                           child: Text(
                             entry.key,
                             style: const TextStyle(
@@ -115,34 +119,38 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
                         Column(
                           children: entry.value.map((data) {
                             String formattedAmount = '${data['amount'] ?? '0'}';
-                            String formattedTime =
-                            DateFormat.jm().format(DateTime.parse(data['date']));
-                            bool isNegative =
-                            (data['type'] == 'Expense' || data['type'] == 'Transfer');
-                            Color amountColor = isNegative ? Colors.red : Colors.green;
+                            String formattedTime = DateFormat.jm()
+                                .format(DateTime.parse(data['date']));
+                            bool isNegative = (data['type'] == 'Expense' ||
+                                data['type'] == 'Transfer');
+                            Color amountColor =
+                                isNegative ? Colors.red : Colors.green;
 
                             return GestureDetector(
                               onTap: () {
-                                Get.to(() =>
-                                    DetailTransactionScreen(
-                                        data: data));
+                                Get.to(
+                                    () => DetailTransactionScreen(data: data));
                               },
                               child: Container(
-                                margin: EdgeInsets.symmetric(vertical: size.height / 150),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: size.height / 150),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: size.width / 35, vertical: size.height / 50),
+                                    horizontal: size.width / 35,
+                                    vertical: size.height / 50),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFAFAFA),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
                                       height: size.height / 16,
                                       width: size.height / 16,
                                       decoration: BoxDecoration(
-                                        color: ColorManager.primary.withOpacity(0.2),
+                                        color: ColorManager.primary
+                                            .withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Center(
@@ -157,7 +165,8 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
                                     SizedBox(width: size.width / 30),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             data['category'] == ''
@@ -186,10 +195,13 @@ class _DetailAccountScreenState extends State<DetailAccountScreen> {
                                       ),
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          isNegative ? '-₹$formattedAmount' : "₹$formattedAmount",
+                                          isNegative
+                                              ? '-₹$formattedAmount'
+                                              : "₹$formattedAmount",
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,

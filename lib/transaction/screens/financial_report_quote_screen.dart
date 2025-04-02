@@ -46,9 +46,11 @@ class FinancialReportQuoteScreen extends StatelessWidget {
                 colorButton: ColorManager.lightBackground,
                 colorText: const Color(0xFF7F3DFF),
                 onTap: () {
-                  Get.to(()=>const FinancialReportScreen());
+                  Get.to(() => const FinancialReportScreen());
                 }),
-            SizedBox(height: size.height/22,)
+            SizedBox(
+              height: size.height / 22,
+            )
           ],
         ),
       ),

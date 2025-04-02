@@ -6,6 +6,7 @@ import 'package:spendo/widgets/custom_button_widget.dart';
 
 class ForgetPasswordEmailSentScreen extends StatelessWidget {
   final String email;
+
   const ForgetPasswordEmailSentScreen({super.key, required this.email});
 
   @override
@@ -42,14 +43,15 @@ class ForgetPasswordEmailSentScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: email,
-                          style:  const TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: ColorManager.primary,
                           ),
                         ),
                         const TextSpan(
-                          text: ' and follow the instructions to reset your password.',
+                          text:
+                              ' and follow the instructions to reset your password.',
                         ),
                       ],
                     ),
@@ -59,7 +61,6 @@ class ForgetPasswordEmailSentScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-
             CustomButton(
               text: "Back to Login",
               colorButton: ColorManager.primary,

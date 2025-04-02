@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/common_drop_down_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
+import '../../widgets/common_app_bar _widget.dart';
 import '../controllers/budget_controller.dart';
 
-class CreateBudgetScreen extends StatefulWidget {
-  const CreateBudgetScreen({
+class EditBudgetScreen extends StatefulWidget {
+  final String? budgetId;
+  final String? category;
+  final double? amount;
+
+  const EditBudgetScreen({
     super.key,
+    this.budgetId,
+    this.category,
+    this.amount,
   });
 
   @override
-  State<CreateBudgetScreen> createState() => _CreateBudgetScreenState();
+  State<EditBudgetScreen> createState() => _EditBudgetScreenState();
 }
 
-class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
+class _EditBudgetScreenState extends State<EditBudgetScreen> {
   final BudgetController budgetController = Get.put(BudgetController());
-  final TextEditingController amountController =
-      TextEditingController(text: '0.0');
-  String selectedCategory = 'Shopping';
+  late TextEditingController amountController;
+  late String selectedCategory;
+
   List<String> categories = [
     "Shopping",
     "Food & Drinks",
@@ -30,6 +37,16 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    amountController = TextEditingController(
+        text: widget.amount != null ? widget.amount!.toStringAsFixed(1) : '');
+
+    selectedCategory = widget.category ?? 'Shopping';
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
@@ -37,7 +54,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
       backgroundColor: const Color(0xFF7F3DFF),
       resizeToAvoidBottomInset: false,
       appBar: CommonAppBar(
-        title: 'Create Budget',
+        title: 'Edit Budget',
         textColor: ColorManager.lightBackground,
         iconColor: ColorManager.lightBackground,
         backGroundCol: const Color(0xFF7F3DFF),
@@ -48,14 +65,12 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: size.width / 22,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: size.width / 22),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'How much do yo want to spend?',
+                  'How much do you want to spend?',
                   style: TextStyle(
                       color: Colors.grey[300],
                       fontWeight: FontWeight.w800,
@@ -92,7 +107,9 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                   value: selectedCategory,
                   items: categories,
                   onChanged: (value) {
-                    selectedCategory = value ?? "Food & Drinks";
+                    setState(() {
+                      selectedCategory = value ?? "Food & Drinks";
+                    });
                   },
                   hintText: "Category",
                   size: size,
@@ -132,23 +149,33 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                 SizedBox(height: size.height / 40),
                 Obx(() => budgetController.checkBox.value
                     ? _showReceiveAlert(size)
-                    : Container()),
+                    : const SizedBox()),
                 const Spacer(),
                 CustomButton(
-                  text: 'Continue',
+                  text: 'Update',
                   colorButton: const Color(0xFF7F3DFF),
                   colorText: ColorManager.lightBackground,
-                  onTap: () {
-                    double amount = double.parse(amountController.text);
-                    if (amountController.text.isEmpty || amount <= 0.0) {
-                      showCustomSnackBar('Error', 'Please enter a valid amount',
-                          isSuccess: false);
-                    } else {
-                      budgetController
-                          .saveBudget(selectedCategory, amountController.text)
-                          .then((onBack) {
+                  onTap: () async {
+                    try {
+                      String amountText = amountController.text.trim();
+                      double? amount = double.tryParse(amountText);
+
+                      if (amount == null || amount <= 0.0) {
+                        showCustomSnackBar(
+                            'Error', 'Please enter a valid amount',
+                            isSuccess: false);
+                        return;
+                      } else {
+                        await budgetController.updateBudget(
+                            widget.budgetId!, selectedCategory, amountText);
                         Navigator.pop(context);
-                      });
+                      }
+                      if (mounted) {
+                        Get.back();
+                      }
+                    } catch (e) {
+                      showCustomSnackBar('Error', 'Something went wrong!',
+                          isSuccess: false);
                     }
                   },
                 ),

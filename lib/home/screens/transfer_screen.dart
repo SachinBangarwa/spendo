@@ -7,7 +7,7 @@ import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/home/controllers/attachment_controller.dart';
 import 'package:spendo/home/controllers/add_transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
 import '../../commons/common_styles.dart';
@@ -27,7 +27,8 @@ class _IncomeScreenState extends State<TransferScreen> {
       TextEditingController(text: '0.0');
   final TextEditingController fromController =
       TextEditingController(text: "HDFC Bank");
-  final TextEditingController toController = TextEditingController(text:"ICICI Bank");
+  final TextEditingController toController =
+      TextEditingController(text: "ICICI Bank");
   final AttachmentController attachmentController =
       Get.put(AttachmentController());
 
@@ -48,13 +49,13 @@ class _IncomeScreenState extends State<TransferScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFF0077FF),
+      backgroundColor: const Color(0xFF0077FF),
       appBar: CommonAppBar(
         title: 'Transfer',
         onBack: () {
           Get.back();
         },
-        backGroundCol: Color(0xFF0077FF),
+        backGroundCol: const Color(0xFF0077FF),
         iconColor: ColorManager.lightBackground,
         textColor: ColorManager.lightBackground,
       ),
@@ -69,7 +70,7 @@ class _IncomeScreenState extends State<TransferScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'How much?',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class _IncomeScreenState extends State<TransferScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       '₹ ',
                       style: TextStyle(
                           color: Colors.white,
@@ -119,24 +120,24 @@ class _IncomeScreenState extends State<TransferScreen> {
                     Row(
                       children: [
                         Flexible(
-                          child: _buildTextField(
-                              size, fromController, 'From', Color(0xFF0077FF)),
+                          child: _buildTextField(size, fromController, 'From',
+                              const Color(0xFF0077FF)),
                         ),
                         Image.asset(
                           'assets/icons/transaction.png',
                           height: size.height / 20,
                         ),
                         Flexible(
-                          child: _buildTextField(
-                              size, toController, 'To', Color(0xFF0077FF)),
+                          child: _buildTextField(size, toController, 'To',
+                              const Color(0xFF0077FF)),
                         ),
                       ],
                     ),
                     SizedBox(
                       height: size.height / 25,
                     ),
-                    _buildTextField(
-                        size, descController, 'Description', Color(0xFF0077FF)),
+                    _buildTextField(size, descController, 'Description',
+                        const Color(0xFF0077FF)),
                     SizedBox(
                       height: size.height / 25,
                     ),
@@ -329,7 +330,7 @@ class _IncomeScreenState extends State<TransferScreen> {
                     const Spacer(),
                     CustomButton(
                         text: 'Continue',
-                        colorButton: Color(0xFF0077FF),
+                        colorButton: const Color(0xFF0077FF),
                         colorText: ColorManager.lightBackground,
                         onTap: () async {
                           double? amount =
@@ -355,7 +356,7 @@ class _IncomeScreenState extends State<TransferScreen> {
                               fromAccountId: fromId ?? '',
                               fromAccountType: fromController.text,
                               type: 'Transfer',
-                              imageUrl: attachmentController.path.value ?? '',
+                              imageUrl: attachmentController.path.value ,
                               toAccountId: toId ?? '',
                               toAccountType: toController.text,
                             )
@@ -366,7 +367,6 @@ class _IncomeScreenState extends State<TransferScreen> {
                                   return _buildDialogSuccessAdded(size);
                                 },
                               );
-
                               Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.pop(context);
                                 Get.offAll(() => DashBoardScreen());

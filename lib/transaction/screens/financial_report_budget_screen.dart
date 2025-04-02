@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class FinancialReportBudgetScreen extends StatelessWidget {
@@ -6,17 +5,17 @@ class FinancialReportBudgetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size= MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color(0xFF7F3DFF),
+      backgroundColor: const Color(0xFF7F3DFF),
       body: SafeArea(
         child: Column(
           children: [
             SizedBox(
               height: size.height / 6,
             ),
-            Text(
+            const Text(
               "This Month",
               style: TextStyle(
                 fontSize: 24,
@@ -27,13 +26,13 @@ class FinancialReportBudgetScreen extends StatelessWidget {
             SizedBox(
               height: size.height / 8,
             ),
-            Text(
+            const Text(
               "2 of 12 Budget is \nexceeds the limit",
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 33,
-                fontWeight: FontWeight.w700,height: 0
-              ),
+                  color: Colors.white,
+                  fontSize: 33,
+                  fontWeight: FontWeight.w700,
+                  height: 0),
               textAlign: TextAlign.center,
             ),
             SizedBox(
@@ -43,7 +42,7 @@ class FinancialReportBudgetScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildCategoryButton(
-                 size,
+                  size,
                   Icons.shopping_bag,
                   "Shopping",
                   Colors.amber,
@@ -52,7 +51,7 @@ class FinancialReportBudgetScreen extends StatelessWidget {
                   width: size.width / 20,
                 ),
                 _buildCategoryButton(
-                 size,
+                  size,
                   Icons.restaurant,
                   "Food",
                   Colors.redAccent,
@@ -66,15 +65,15 @@ class FinancialReportBudgetScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryButton(
-     Size size,
-      IconData icon,
-      String label,
-      Color color,
-      ) {
+    Size size,
+    IconData icon,
+    String label,
+    Color color,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: size.height/55,
-        horizontal: size.width/25,
+        vertical: size.height / 55,
+        horizontal: size.width / 25,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -82,13 +81,15 @@ class FinancialReportBudgetScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: color,size: 30,),
+          Icon(
+            icon,
+            color: color,
+            size: 30,
+          ),
           SizedBox(width: size.width * 0.02),
           Text(
             label,
-            style: TextStyle(
-                fontWeight: FontWeight.w700, fontSize: 18
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
           ),
         ],
       ),

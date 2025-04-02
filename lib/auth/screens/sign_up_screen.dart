@@ -9,7 +9,7 @@ import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
 
-import '../../widgets/common_appBar _widget.dart';
+import '../../widgets/common_app_bar _widget.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -106,7 +106,7 @@ class SignUpScreen extends StatelessWidget {
                     email.isNotEmpty &&
                     password.isNotEmpty) {
                   User? user =
-                      await signUpController.signUpCloud(name,email, password);
+                      await signUpController.signUpCloud(name, email, password);
                   if (user != null) {
                     Get.to(() => LoginScreen());
                   }
@@ -128,9 +128,9 @@ class SignUpScreen extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 await signUpController.signWithGoogle().then((bool isVerify) {
-                  // if (isVerify) {
-                 Get.offAll(()=>DashBoardScreen());
-                  // }
+                  if (isVerify) {
+                    Get.offAll(() => DashBoardScreen());
+                  }
                 });
               },
               child: Container(
@@ -159,7 +159,7 @@ class SignUpScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have an account?",
+                const Text("Already have an account?",
                     style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -168,7 +168,7 @@ class SignUpScreen extends StatelessWidget {
                   onPressed: () {
                     Get.to(() => LoginScreen());
                   },
-                  child: Text(
+                  child: const Text(
                     "Login",
                     style: TextStyle(
                       decoration: TextDecoration.underline,
@@ -189,23 +189,23 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildPasswordField(Size size) {
     return Obx(() => TextFormField(
-      controller: passwordController,
-      obscureText: signUpController.visible.value,
-      style: const TextStyle(fontWeight: FontWeight.w600),
-      decoration: CommonStyles.inputDecoration('Password', size).copyWith(
-        suffixIcon: GestureDetector(
-          onTap: signUpController.visible.toggle,
-          child: Icon(
-            signUpController.visible.value
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,
-            color: Colors.grey,
-            size: 24,
+          controller: passwordController,
+          obscureText: signUpController.visible.value,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+          decoration: CommonStyles.inputDecoration('Password', size).copyWith(
+            suffixIcon: GestureDetector(
+              onTap: signUpController.visible.toggle,
+              child: Icon(
+                signUpController.visible.value
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: Colors.grey,
+                size: 24,
+              ),
+            ),
           ),
-        ),
-      ),
-      cursorColor: ColorManager.primary,
-    ));
+          cursorColor: ColorManager.primary,
+        ));
   }
 
   Widget _buildTextField(
@@ -217,5 +217,4 @@ class SignUpScreen extends StatelessWidget {
       cursorColor: ColorManager.primary,
     );
   }
-
 }

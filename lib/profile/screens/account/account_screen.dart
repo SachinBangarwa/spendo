@@ -5,8 +5,7 @@ import 'package:spendo/profile/screens/account/add_account_screen.dart';
 import 'package:spendo/profile/screens/account/detail_account_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-
-import '../../../widgets/common_appBar _widget.dart';
+import '../../../widgets/common_app_bar _widget.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
@@ -37,19 +36,19 @@ class AccountScreen extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.01),
           Obx(() => Expanded(
-            flex: 1,
-            child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: size.width/22),
-              child: Text(
-                "₹${totalBalanceController.totalBalance.value.toStringAsFixed(2)}",
-                style: TextStyle(
-                  fontSize: size.width * 0.1,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width / 22),
+                  child: Text(
+                    "₹${totalBalanceController.totalBalance.value.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: size.width * 0.1,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          )),
+              )),
           Divider(
             height: size.height / 20,
             color: Colors.black12.withOpacity(0.1),
@@ -58,7 +57,7 @@ class AccountScreen extends StatelessWidget {
             flex: 5,
             child: Obx(() {
               if (totalBalanceController.accountsList.isEmpty) {
-                return Center(
+                return const Center(
                   child: Text(
                     "No accounts available",
                     style: TextStyle(fontSize: 18, color: Colors.black54),
@@ -69,12 +68,15 @@ class AccountScreen extends StatelessWidget {
                 itemCount: totalBalanceController.accountsList.length,
                 padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
                 itemBuilder: (context, index) {
-                  Map<String,dynamic> account = totalBalanceController.accountsList[index];
+                  Map<String, dynamic> account =
+                      totalBalanceController.accountsList[index];
                   return Column(
                     children: [
                       buildAccountTile(
-                      account,
-                        account['type'] == 'Bank' ? 'assets/icons/Bank.png' : 'assets/icons/wallet.png',
+                        account,
+                        account['type'] == 'Bank'
+                            ? 'assets/icons/Bank.png'
+                            : 'assets/icons/wallet.png',
                         size,
                       ),
                       Divider(
@@ -95,7 +97,7 @@ class AccountScreen extends StatelessWidget {
               colorButton: ColorManager.primary,
               colorText: ColorManager.lightBackground,
               onTap: () {
-                Get.to(() => AddAccountScreen());
+                Get.to(() => const AddAccountScreen());
               },
             ),
           ),
@@ -105,17 +107,19 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget buildAccountTile(
-      Map<String,dynamic> account, String iconPath, Size size) {
+      Map<String, dynamic> account, String iconPath, Size size) {
     return ListTile(
-      onTap: (){
-        Get.to(()=>DetailAccountScreen(account: account,));
+      onTap: () {
+        Get.to(() => DetailAccountScreen(
+              account: account,
+            ));
       },
       leading: Container(
         width: size.width / 7,
         height: size.width / 7,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Color(0xFFF1F1FA),
+          color: const Color(0xFFF1F1FA),
         ),
         child: Padding(
           padding: EdgeInsets.all(size.width / 30),
@@ -125,11 +129,11 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: Text( account['name'] ?? 'Unknown',
-          style:
-              TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0)),
+      title: Text(account['name'] ?? 'Unknown',
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w600, height: 0)),
       trailing: Text('₹${account['balance'] ?? 0.0}',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
     );
   }
 }

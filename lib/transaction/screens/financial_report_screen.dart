@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spendo/home/controllers/financial_report_controller.dart';
+import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/detail_transaction_screen.dart';
 import 'package:spendo/widgets/custom_linear_progress_bar_widget.dart';
 import 'package:spendo/widgets/custom_pie_chart_widget.dart';
 import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
-import '../../widgets/common_appBar _widget.dart';
+import '../../widgets/common_app_bar _widget.dart';
 
 class FinancialReportScreen extends StatefulWidget {
   const FinancialReportScreen({super.key});
@@ -19,6 +20,8 @@ class FinancialReportScreen extends StatefulWidget {
 class _FinancialReportScreenState extends State<FinancialReportScreen> {
   final FinancialReportController controller =
       Get.put(FinancialReportController());
+  final TransactionController transactionController =
+      Get.put(TransactionController());
 
   bool isBudget = false;
   bool isExpense = false;
@@ -36,8 +39,6 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     "Health & Fitness"
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -54,7 +55,6 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Frequency Menu
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width / 22),
             child: Row(
@@ -69,14 +69,16 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                     padding: EdgeInsets.only(
                         right: size.width / 40, top: 2, bottom: 2),
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: const Color(0xFFF1F1FA)),
+                        border: Border.all(
+                            width: 2, color: const Color(0xFFF1F1FA)),
                         borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       children: [
                         const Icon(Icons.keyboard_arrow_down_sharp,
                             size: 35, color: Color(0xff7F3DFF)),
                         Obx(() => Text(controller.frequency.value,
-                            style: const TextStyle(fontWeight: FontWeight.w600)))
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)))
                       ],
                     ),
                   ),
@@ -86,7 +88,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                   height: size.height / 17,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: const Color(0xFFF1F1FA)),
+                      border:
+                          Border.all(width: 2, color: const Color(0xFFF1F1FA)),
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     children: [
@@ -146,7 +149,6 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               ],
             ),
           ),
-
           if (!isBudget)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,12 +156,23 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                 SizedBox(height: size.height / 55),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: size.width / 22),
-                  child: const Text('\$6000',
-                      style:
-                          TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
+                  child: Obx(() {
+                    String amount = isIncome
+                        ? '₹${transactionController.totalIncome.value.toString()}'
+                        : '₹${transactionController.totalExpense.value.toString()}';
+                    return Text(amount,
+                        style: const TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.w700));
+                  }),
                 ),
-                 CustomSpendFrequencyChartWidget(isIncome: isIncome,controller: controller,),
-                SizedBox(height: size.height/35,),
+                const SizedBox(height: 2),
+                CustomSpendFrequencyChartWidget(
+                  isIncome: isIncome,
+                  controller: controller,
+                ),
+                SizedBox(
+                  height: size.height / 35,
+                ),
               ],
             )
           else
@@ -169,9 +182,10 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                 child: CustomPieChartWidget(
                   type: isIncome ? "Income" : "Expense",
                 )),
-
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 22,),
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width / 22,
+            ),
             child: Container(
               padding: const EdgeInsets.all(1.5),
               width: size.width,
@@ -238,9 +252,13 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               ),
             ),
           ),
-            SizedBox(height: size.height/35,),
-            Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 22,),
+          SizedBox(
+            height: size.height / 35,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width / 22,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -267,7 +285,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2, color:  const Color(0xFFF1F1FA)),
+                        border: Border.all(
+                            width: 2, color: const Color(0xFFF1F1FA)),
                         borderRadius: BorderRadius.circular(20)),
                     child: const Padding(
                       padding: EdgeInsets.all(2.0),
@@ -282,7 +301,9 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                             'Transaction',
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(width: 2,)
+                          SizedBox(
+                            width: 2,
+                          )
                         ],
                       ),
                     ),
@@ -294,8 +315,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                       padding: EdgeInsets.all(size.width / 80),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 2, color:   const Color(0xFFF1F1FA)),
+                          border: Border.all(
+                              width: 2, color: const Color(0xFFF1F1FA)),
                           borderRadius: BorderRadius.circular(10)),
                       child: const Icon(
                         Icons.sort_sharp,
@@ -305,7 +326,6 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               ],
             ),
           ),
-
           if (!isBudget) ...[
             SizedBox(
               height: size.height / 30,
@@ -358,111 +378,111 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   ) {
     List dataList = isIncome ? controller.incomeList : controller.expenseList;
 
-   return ListView.builder(
-     padding: EdgeInsets.only(bottom: size.height / 14),
-     shrinkWrap: true,
-     physics: const NeverScrollableScrollPhysics(),
-     itemCount: dataList.length,
-     itemBuilder: (context, index) {
-       Map<String, dynamic> data = dataList[index];
+    return ListView.builder(
+      padding: EdgeInsets.only(bottom: size.height / 14),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: dataList.length,
+      itemBuilder: (context, index) {
+        Map<String, dynamic> data = dataList[index];
 
-       String formattedAmount = '${data['amount'] ?? '0'}';
-       DateTime dateTime = DateTime.parse(data['date']);
-       String formattedTime = DateFormat.jm().format(dateTime);
+        String formattedAmount = '${data['amount'] ?? '0'}';
+        DateTime dateTime = DateTime.parse(data['date']);
+        String formattedTime = DateFormat.jm().format(dateTime);
 
-       bool isNegative =
-           data['type'] == 'Expense' || data['type'] == 'Transfer';
-       Color amountColor = isNegative
-           ? const Color(0xFFFD3C4A) // Expense Color
-           : const Color(0xFF00A86B); // Income Color
+        bool isNegative =
+            data['type'] == 'Expense' || data['type'] == 'Transfer';
+        Color amountColor = isNegative
+            ? const Color(0xFFFD3C4A) // Expense Color
+            : const Color(0xFF00A86B); // Income Color
 
-       return GestureDetector(
-         onTap: () {
-           Get.to(() => DetailTransactionScreen(data: data));
-         },
-         child: Container(
-           margin: EdgeInsets.symmetric(
-               horizontal: size.width / 22, vertical: size.height / 150),
-           padding: EdgeInsets.symmetric(
-               horizontal: size.width / 35, vertical: size.height / 50),
-           decoration: BoxDecoration(
-             color: const Color(0xFFFAFAFA),
-             borderRadius: BorderRadius.circular(20),
-           ),
-           child: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(
-                 height: size.height / 16,
-                 width: size.height / 16,
-                 decoration: BoxDecoration(
-                   color: ColorManager.primary.withOpacity(0.2),
-                   borderRadius: BorderRadius.circular(12),
-                 ),
-                 child: Center(
-                   child: Image.asset(
-                     'assets/icons/profile.png',
-                     width: size.height / 22,
-                     height: size.height / 22,
-                     fit: BoxFit.contain,
-                   ),
-                 ),
-               ),
-               SizedBox(width: size.width / 30),
-               Expanded(
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text(
-                       data['category'].isEmpty
-                           ? 'Transfer'
-                           : data['category'],
-                       style: const TextStyle(
-                           fontSize: 15,
-                           fontWeight: FontWeight.w600,
-                           color: Colors.black87),
-                     ),
-                     const SizedBox(height: 4),
-                     Text(
-                       maxLines: 1,
-                       overflow: TextOverflow.ellipsis,
-                       data['description'].isEmpty
-                           ? 'Buy some grocery'
-                           : data['description'],
-                       style: const TextStyle(
-                           fontWeight: FontWeight.w500,
-                           fontSize: 13,
-                           color: Color(0xFF91919F)),
-                     ),
-                   ],
-                 ),
-               ),
-               Column(
-                 crossAxisAlignment: CrossAxisAlignment.end,
-                 children: [
-                   Text(
-                     isNegative ? '-₹$formattedAmount' : "₹$formattedAmount",
-                     style: TextStyle(
-                         fontSize: 16,
-                         fontWeight: FontWeight.bold,
-                         color: amountColor),
-                   ),
-                   const SizedBox(height: 4),
-                   Text(
-                     formattedTime,
-                     style: const TextStyle(
-                         fontSize: 13,
-                         fontWeight: FontWeight.w600,
-                         color: Color(0xFF91919F)),
-                   ),
-                 ],
-               ),
-             ],
-           ),
-         ),
-       );
-     },
-   );
+        return GestureDetector(
+          onTap: () {
+            Get.to(() => DetailTransactionScreen(data: data));
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: size.width / 22, vertical: size.height / 150),
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width / 35, vertical: size.height / 50),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAFAFA),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: size.height / 16,
+                  width: size.height / 16,
+                  decoration: BoxDecoration(
+                    color: ColorManager.primary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/icons/profile.png',
+                      width: size.height / 22,
+                      height: size.height / 22,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(width: size.width / 30),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data['category'].isEmpty
+                            ? 'Transfer'
+                            : data['category'],
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        data['description'].isEmpty
+                            ? 'Buy some grocery'
+                            : data['description'],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            color: Color(0xFF91919F)),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      isNegative ? '-₹$formattedAmount' : "₹$formattedAmount",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: amountColor),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      formattedTime,
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF91919F)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void showFrequencyMenu(BuildContext context, Size size) async {
@@ -483,4 +503,3 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     controller.updateFrequency(selectedFreq ?? 'Year');
   }
 }
-

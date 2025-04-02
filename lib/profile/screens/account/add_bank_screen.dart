@@ -5,7 +5,7 @@ import 'package:spendo/profile/controllers/add_bank_controller.dart';
 import 'package:spendo/profile/screens/account/add_account_success_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-import '../../../widgets/common_appBar _widget.dart';
+import '../../../widgets/common_app_bar _widget.dart';
 
 class AddBankScreen extends StatefulWidget {
   const AddBankScreen({
@@ -37,7 +37,8 @@ class _AddBankScreenState extends State<AddBankScreen> {
             ? widget.name!
             : "Select Bank";
   }
-@override
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -175,9 +176,11 @@ class _AddBankScreenState extends State<AddBankScreen> {
     );
   }
 
-  Widget _buildTextField(Size size, String hintText, RxString value,bool readOnly) {
-    return Obx(() => TextFormField( readOnly: readOnly,
-      enabled: false,
+  Widget _buildTextField(
+      Size size, String hintText, RxString value, bool readOnly) {
+    return Obx(() => TextFormField(
+          readOnly: readOnly,
+          enabled: false,
           initialValue: value.value,
           style: const TextStyle(fontWeight: FontWeight.w600),
           decoration: CommonStyles.inputDecoration(hintText, size),

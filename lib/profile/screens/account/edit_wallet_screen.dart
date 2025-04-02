@@ -4,7 +4,7 @@ import 'package:spendo/commons/common_styles.dart';
 import 'package:spendo/profile/screens/account/add_account_success_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-import '../../../widgets/common_appBar _widget.dart';
+import '../../../widgets/common_app_bar _widget.dart';
 import 'package:spendo/profile/controllers/add_wallet_controller.dart';
 
 class EditWalletScreen extends StatefulWidget {
@@ -28,8 +28,9 @@ class _EditWalletScreenState extends State<EditWalletScreen> {
   void initState() {
     super.initState();
     _balanceController =
-        TextEditingController(text: widget.account['balance'].toString() ?? '0.0');
-    _walletController.selectedAccountName.value = widget.account['name']??'Paytm Wallet';
+        TextEditingController(text: widget.account['balance'].toString());
+    _walletController.selectedAccountName.value =
+        widget.account['name'] ?? 'Paytm Wallet';
   }
 
   @override
@@ -64,7 +65,7 @@ class _EditWalletScreenState extends State<EditWalletScreen> {
             color: Colors.white,
           ),
         ),
-        onTrailingTap: (){
+        onTrailingTap: () {
           _walletController.removeWallet(widget.account['accountId']);
           Get.back();
           Get.back();
@@ -154,7 +155,7 @@ class _EditWalletScreenState extends State<EditWalletScreen> {
                   }),
                   SizedBox(height: size.height / 20),
                   _buildBankIcons(size),
-                  Spacer(),
+                  const Spacer(),
                   CustomButton(
                     text: 'Continue',
                     colorButton: ColorManager.primary,

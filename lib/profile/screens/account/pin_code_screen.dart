@@ -1,24 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:lottie/lottie.dart';
-import 'package:spendo/commons/common_styles.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
+import 'package:spendo/profile/controllers/user_detail_controller.dart';
+import 'package:spendo/profile/screens/setting/security_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/custom_button_widget.dart';
 
-class PinScreen extends StatefulWidget {
+class PinCodeScreen extends StatefulWidget {
   final String title;
   final Function(List<String>) onSubmit;
 
-  const PinScreen({super.key, required this.title, required this.onSubmit});
+  const PinCodeScreen({super.key, required this.title, required this.onSubmit});
 
   @override
-  State<PinScreen> createState() => _PinScreenState();
+  State<PinCodeScreen> createState() => _PinCodeScreenState();
 }
 
-class _PinScreenState extends State<PinScreen> {
+class _PinCodeScreenState extends State<PinCodeScreen> {
   List<String> pin = [];
 
   void _onKeyPressed(String value) {
@@ -135,7 +132,7 @@ class _PinScreenState extends State<PinScreen> {
           ),
           SizedBox(height: size.height / 14),
           _buildPinIndicator(size),
-          Spacer(),
+          const Spacer(),
           _buildKeypad(),
           SizedBox(height: size.height / 30),
         ],
@@ -144,13 +141,12 @@ class _PinScreenState extends State<PinScreen> {
   }
 }
 
-/// **Pin Setup Screen**
 class PinSetupScreen extends StatelessWidget {
   const PinSetupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PinScreen(
+    return PinCodeScreen(
       title: "Let's setup your PIN",
       onSubmit: (pin) {
         Navigator.push(
@@ -164,25 +160,39 @@ class PinSetupScreen extends StatelessWidget {
   }
 }
 
-/// **Confirm Pin Screen**
 class ConfirmPinScreen extends StatelessWidget {
   final List<String> setupPin;
 
-  const ConfirmPinScreen({super.key, required this.setupPin});
+  ConfirmPinScreen({super.key, required this.setupPin});
+
+  final UserDetailController userDetailController =
+      Get.put(UserDetailController());
 
   @override
   Widget build(BuildContext context) {
-    return PinScreen(
+    return PinCodeScreen(
       title: "Ok. Re-type your PIN again.",
-      onSubmit: (confirmPin) {
+      onSubmit: (confirmPin) async {
         if (setupPin.join() == confirmPin.join()) {
+          bool conform =
+              await userDetailController.lockAccount(confirmPin.join());
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("PIN setup successfully!")),
+            const SnackBar(
+              content: Text("PIN setup successfully!"),
+              duration: Duration(seconds: 1),
+            ),
           );
-          // TODO: Save PIN and navigate
+          if (conform) {
+            Get.off(() => SecurityScreen())!.then((_) {
+              Get.offAll(() => DashBoardScreen(selectedIndex: 3));
+            });
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("PINs do not match, try again!")),
+            const SnackBar(
+              content: Text("PINs do not match, try again!"),
+              duration: Duration(seconds: 1),
+            ),
           );
           Navigator.pop(context);
         }
@@ -190,8 +200,3 @@ class ConfirmPinScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-

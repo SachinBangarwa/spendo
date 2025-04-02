@@ -5,7 +5,7 @@ import 'package:spendo/profile/controllers/add_account_controller.dart';
 import 'package:spendo/profile/screens/account/add_bank_screen.dart';
 import 'package:spendo/profile/screens/account/add_wallet_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 
 class AddAccountScreen extends StatefulWidget {
@@ -97,7 +97,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   SizedBox(height: size.height / 35),
                   DropdownButtonFormField<String>(
                     value: _addAccountController.selectedAccountType.value,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.black),

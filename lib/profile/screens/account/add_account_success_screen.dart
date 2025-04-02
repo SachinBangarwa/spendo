@@ -20,15 +20,13 @@ class _AddAccountSuccessScreenState extends State<AddAccountSuccessScreen> {
     super.initState();
     moveAccountScreen();
   }
+
   Future moveAccountScreen() async {
     await Future.delayed(const Duration(seconds: 2));
     Get.to(() => AccountScreen())!.then((_) {
       Get.offAll(() => DashBoardScreen(selectedIndex: 3));
     });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {

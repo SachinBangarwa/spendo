@@ -77,7 +77,6 @@ class FinancialReportController extends GetxController {
             .map((doc) => doc.data() as Map<String, dynamic>)
             .toList());
 
-        // ✅ Category-wise Amount निकालना
         updateCategoryWiseAmounts();
       }
     } catch (e) {

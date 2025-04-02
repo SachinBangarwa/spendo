@@ -8,7 +8,7 @@ import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/home/controllers/attachment_controller.dart';
 import 'package:spendo/home/controllers/add_transaction_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
-import 'package:spendo/widgets/common_appBar%20_widget.dart';
+import 'package:spendo/widgets/common_app_bar%20_widget.dart';
 import 'package:spendo/widgets/common_drop_down_widget.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
 import 'package:spendo/widgets/custom_snackbar_widget.dart';
@@ -81,8 +81,9 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
   Widget build(BuildContext context) {
     List<String> categories =
         widget.type == "Income" ? incomeCategories : expenseCategories;
-    Color themeColor =
-        widget.type == "Income" ? Color(0xFF00A86B) : Color(0xFFFD3C4A);
+    Color themeColor = widget.type == "Income"
+        ? const Color(0xFF00A86B)
+        : const Color(0xFFFD3C4A);
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -112,7 +113,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'How much?',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -123,7 +124,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       '₹ ',
                       style: TextStyle(
                           color: Colors.white,
@@ -455,7 +456,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                                 children: [
                                   Text(
                                     selectedFrequency ?? '',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 13,
                                         color: Colors.black87),
@@ -465,7 +466,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                                   ),
                                   Text(
                                     selectedStartDate ?? ''.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 13,
                                         color: Colors.black87),
@@ -484,7 +485,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                               ),
                               Text(
                                 selectedEndDate ?? ''.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 13,
                                     color: Colors.black87),
@@ -499,13 +500,13 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                             child: Container(
                               height: size.height / 28,
                               width: size.height / 15,
-                              margin: EdgeInsets.only(right: 5),
+                              margin: const EdgeInsets.only(right: 5),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: Color(0xFF212221),
+                                color: const Color(0xFF212221),
                               ),
-                              child: Text(
+                              child: const Text(
                                 'Edit',
                                 style: TextStyle(
                                     fontSize: 12,
@@ -552,7 +553,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                               frequency: selectedFrequency,
                               startDate: selectedStartDate,
                               endDate: selectedEndDate,
-                              imageUrl: attachmentController.path.value ?? '',
+                              imageUrl: attachmentController.path.value,
                               toAccountId: '',
                               toAccountType: '',
                             )
@@ -654,7 +655,7 @@ class _CommonTransactionScreen extends State<CommonTransactionScreen> {
                       borderColor: themeColor,
                       onChanged: (value) {
                         setState(() {
-                          selectedFrequency = value ?? 'Frequency';
+                          selectedFrequency = value ?? 'Daily';
                         });
                       },
                       hintText: 'Frequency',

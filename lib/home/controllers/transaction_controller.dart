@@ -92,7 +92,6 @@ class TransactionController extends GetxController {
           totalExpense.value = expense + transfer;
           totalTransfer.value = transfer;
           totalBalance.value = income - (expense + transfer);
-
         });
       }
     } catch (e) {
@@ -110,7 +109,6 @@ class TransactionController extends GetxController {
             .doc(transactionId)
             .delete();
       }
-      print("Transaction deleted successfully");
     } catch (e) {
       print("Error deleting transaction: $e");
     }
@@ -131,7 +129,7 @@ class TransactionController extends GetxController {
       int currentWeekday = now.weekday;
       startDate = now.subtract(Duration(days: currentWeekday - 1));
       endDate = startDate.add(const Duration(days: 7));
-    } else if (filter == "Monthly") {
+    } else if (filter == "Month") {
       startDate = DateTime(now.year, now.month, 1);
       endDate = DateTime(now.year, now.month + 1, 1);
     } else {
@@ -203,7 +201,6 @@ class TransactionController extends GetxController {
           else
             "repeat": FieldValue.delete(),
         });
-        print("Transaction added successfully!");
       }
     } catch (e) {
       print("Error adding transaction: $e");

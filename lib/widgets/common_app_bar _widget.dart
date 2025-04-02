@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -42,7 +43,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: textColor ?? Color(0xFF212325)),
+            color: textColor ?? const Color(0xFF212325)),
       ),
       centerTitle: true,
       actions: trailing != null

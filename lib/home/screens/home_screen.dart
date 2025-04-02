@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:spendo/dashboard/dash_board_screen.dart';
 import 'package:spendo/home/controllers/transaction_controller.dart';
 import 'package:spendo/home/screens/common_transaction_screen.dart';
 import 'package:spendo/profile/controllers/total_balance_controller.dart';
+import 'package:spendo/profile/controllers/user_detail_controller.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/transaction/screens/detail_transaction_screen.dart';
-import 'package:spendo/widgets/custom_spend_frequency_chart_widget.dart';
-
+import 'package:spendo/widgets/common_chart_home_screen_widget.dart';
 import '../controllers/home_transaction_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Get.put(TransactionController());
   final HomeTransactionController homeTransactionController =
       Get.put(HomeTransactionController());
+  final UserDetailController userDetailController =
+      Get.put(UserDetailController());
 
   final TotalBalanceController totalBalanceController =
       Get.put(TotalBalanceController());
@@ -52,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: size.height / 3,
+                  height: size.height / 3.3,
                   width: size.width,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
@@ -71,45 +74,64 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(
-                        left: size.width / 22, right: size.width / 22),
+                        left: size.width / 22,
+                        right: size.width / 22,
+                        top: size.height / 66),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: ColorManager.primary, width: 2),
-                              ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(() => DashBoardScreen(
+                                      selectedIndex: 3,
+                                    ));
+                              },
                               child: Container(
-                                height: size.height / 9,
-                                width: size.width / 9,
-                                decoration: const BoxDecoration(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/Dr_ Abdul Kalam.png'),
-                                    fit: BoxFit.cover,
+                                  border: Border.all(
+                                      color: ColorManager.primary, width: 2),
+                                ),
+                                child: ClipOval(
+                                  child: SizedBox(
+                                    width: size.width / 12,
+                                    height: size.height / 26,
+                                    child:
+                                        userDetailController.user?.photoURL !=
+                                                    null &&
+                                                userDetailController
+                                                    .user!.photoURL!.isNotEmpty
+                                            ? Image.network(
+                                                userDetailController
+                                                    .user!.photoURL!,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Icon(
+                                                Icons.person,
+                                                size: size.width / 6,
+                                                color: Colors.black,
+                                              ),
                                   ),
                                 ),
                               ),
                             ),
-                            const Row(
+                            Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.keyboard_arrow_down_sharp,
                                   size: 35,
                                   color: ColorManager.primary,
                                 ),
                                 Text(
-                                  'October',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black54),
+                                  DateFormat.MMMM().format(DateTime.now()),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black54,
+                                  ),
                                 )
                               ],
                             ),
@@ -121,29 +143,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ))
                           ],
                         ),
-                        Transform.translate(
-                          offset: const Offset(0, -10),
-                          child: const Text(
-                            'Account Balance',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF91919F)),
-                          ),
+                        const Text(
+                          'Account Balance',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF91919F)),
                         ),
-                        Transform.translate(
-                          offset: const Offset(0, -10),
-                          child: Obx(() => Text(
-                                '₹${totalBalanceController.totalBalance.value + transactionController.totalBalance.value}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                  color: totalBalanceController
-                                              .totalBalance.value <
-                                          0
-                                      ? const Color(0xFFFD3C4A)
-                                      : Colors.black,
-                                ),
-                              )),
+                        Obx(() => Text(
+                              '₹${totalBalanceController.totalBalance.value + transactionController.totalBalance.value}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color:
+                                    totalBalanceController.totalBalance.value <
+                                            0
+                                        ? const Color(0xFFFD3C4A)
+                                        : Colors.black,
+                              ),
+                            )),
+                        SizedBox(
+                          height: size.height / 44,
                         ),
                         Obx(
                           () => Row(
@@ -185,15 +204,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: size.height / 70,
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: size.width / 22, vertical: size.height / 70),
+                    horizontal: size.width / 22,
+                  ),
                   child: const Text(
                     'Spend Frequency',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600, height: 0),
                   ),
                 ),
-                // const CustomSpendFrequencyChartWidget(),
+                SizedBox(
+                  height: size.height / 45,
+                ),
+                CommonChartHomeScreenWidget(),
+                SizedBox(
+                  height: size.height / 45,
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: size.width / 22, vertical: size.width / 111),
@@ -204,12 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             setState(() {
                               selectIndex = index;
-                              homeTransactionController.fetchFilteredTransactions(days[selectIndex]);
+                              homeTransactionController
+                                  .fetchFilteredTransactions(days[selectIndex]);
                             });
                           },
                           child: Container(
                             alignment: Alignment.center,
-                            height: size.height / 19,
+                            height: size.height / 20,
                             width: size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),

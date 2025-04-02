@@ -4,7 +4,7 @@ import 'package:spendo/commons/common_styles.dart';
 import 'package:spendo/profile/screens/account/add_account_success_screen.dart';
 import 'package:spendo/theme/color_manager.dart';
 import 'package:spendo/widgets/custom_button_widget.dart';
-import '../../../widgets/common_appBar _widget.dart';
+import '../../../widgets/common_app_bar _widget.dart';
 import 'package:spendo/profile/controllers/add_wallet_controller.dart';
 
 class AddWalletScreen extends StatefulWidget {
@@ -35,6 +35,7 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
             ? widget.name!
             : "Select Wallet";
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -42,6 +43,7 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
     _walletController.dispose();
     _balanceController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -120,31 +122,31 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
                       size, 'Wallet Name', _walletController.walletName),
                   SizedBox(height: size.height / 40),
                   Obx(() {
-
                     return DropdownButtonFormField<String>(
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-
-                      value: _walletController.banks.contains(_walletController.selectedAccountName.value)
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                      value: _walletController.banks.contains(
+                              _walletController.selectedAccountName.value)
                           ? _walletController.selectedAccountName.value
                           : null,
-                      decoration: CommonStyles.inputDecoration('Select Wallet', size),
-
+                      decoration:
+                          CommonStyles.inputDecoration('Select Wallet', size),
                       items: _walletController.banks
-                          .map((bank) => DropdownMenuItem(value: bank, child: Text(bank)))
+                          .map((bank) =>
+                              DropdownMenuItem(value: bank, child: Text(bank)))
                           .toList(),
-
                       onChanged: (value) {
                         if (value != null) {
                           _walletController.changeSelectedAccount(value);
                         }
                       },
                     );
-                  })
-
-                  ,
+                  }),
                   SizedBox(height: size.height / 20),
                   _buildBankIcons(size),
-                  Spacer(),
+                  const Spacer(),
                   CustomButton(
                     text: 'Continue',
                     colorButton: ColorManager.primary,
@@ -172,8 +174,8 @@ class _AddWalletScreenState extends State<AddWalletScreen> {
 
   Widget _buildTextField(Size size, String hintText, RxString value) {
     return Obx(() => TextFormField(
-      readOnly: true,
-      enabled: false,
+          readOnly: true,
+          enabled: false,
           initialValue: value.value,
           style: const TextStyle(fontWeight: FontWeight.w600),
           decoration: CommonStyles.inputDecoration(hintText, size),

@@ -26,6 +26,7 @@ class AddBankController extends GetxController {
   void changeSelectedAccount(String account) {
     selectedAccountName.value = account;
   }
+
   Future<void> saveBankToFirebase() async {
     try {
       if (selectedAccountName.value != "Select Bank" &&
@@ -70,6 +71,7 @@ class AddBankController extends GetxController {
       print('Error saving bank: $e');
     }
   }
+
   Future updateBank(String accountId) async {
     try {
       if (user != null) {
@@ -78,7 +80,7 @@ class AddBankController extends GetxController {
             .doc(user!.uid)
             .collection('accounts');
 
-        await    reference.doc(accountId).update({
+        await reference.doc(accountId).update({
           'name': selectedAccountName.value,
           'balance': balance.value,
           'createdAt': FieldValue.serverTimestamp(),
@@ -86,6 +88,7 @@ class AddBankController extends GetxController {
       }
     } catch (e) {}
   }
+
   Future removeBank(String accountId) async {
     try {
       if (user != null) {
@@ -94,9 +97,8 @@ class AddBankController extends GetxController {
             .doc(user!.uid)
             .collection('accounts');
 
-        await    reference.doc(accountId).delete();
+        await reference.doc(accountId).delete();
       }
     } catch (e) {}
   }
-
 }
